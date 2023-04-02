@@ -1,57 +1,154 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React from "react";
+import AdminLogin from "./pages/admin/AdminLogin";
+import Assignment from "./pages/admin/Assignment";
+import AssignmentMark from "./pages/admin/AssignmentMark";
+import Dashboard from "./pages/admin/Dashboard";
+import EditAssignment from "./pages/admin/EditAssignment";
+import EditQuiz from "./pages/admin/EditQuiz";
+import EditVideo from "./pages/admin/EditVideo";
+import Quizzes from "./pages/admin/Quizzes";
+import Videos from "./pages/admin/Videos";
+import CoursePlayer from "./pages/student/CoursePlayer";
+import Leaderboard from "./pages/student/Leaderboard";
+import Quiz from "./pages/student/Quiz";
+import StudentLogin from "./pages/student/StudentLogin";
+import StudentRegistration from "./pages/student/StudentRegistration";
+
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import AdminPrivateRoute from "./components/AdminPrivateRoute";
+import PublicRoute from "./components/PublicRoute";
+import StudentPrivateRoute from "./components/StudentPrivateRoute";
+import useAuthCheck from "./hooks/useAuthCheck";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+  const authChecked = useAuthCheck();
+  return !authChecked ? (
+    <div>Checking authentication....</div>
+  ) : (
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <PublicRoute>
+              <StudentLogin />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/registration"
+          element={
+            <PublicRoute>
+              <StudentRegistration />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/courses"
+          element={
+            <StudentPrivateRoute>
+              <CoursePlayer />
+            </StudentPrivateRoute>
+          }
+        />
+        <Route
+          path="/courses/:videoId"
+          element={
+            <StudentPrivateRoute>
+              <CoursePlayer />
+            </StudentPrivateRoute>
+          }
+        />
+        <Route
+          path="/leaderboard"
+          element={
+            <StudentPrivateRoute>
+              <Leaderboard />
+            </StudentPrivateRoute>
+          }
+        />
+        <Route
+          path="/quiz/:id"
+          element={
+            <StudentPrivateRoute>
+              <Quiz />
+            </StudentPrivateRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <PublicRoute>
+              <AdminLogin />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/admin/assignment"
+          element={
+            <AdminPrivateRoute>
+              <Assignment />
+            </AdminPrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/assignment/:id"
+          element={
+            <AdminPrivateRoute>
+              <EditAssignment />
+            </AdminPrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/marks"
+          element={
+            <AdminPrivateRoute>
+              <AssignmentMark />
+            </AdminPrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/quizzes"
+          element={
+            <AdminPrivateRoute>
+              <Quizzes />
+            </AdminPrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/quizzes/:idc"
+          element={
+            <AdminPrivateRoute>
+              <EditQuiz />
+            </AdminPrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminPrivateRoute>
+              <Dashboard />
+            </AdminPrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/videos"
+          element={
+            <AdminPrivateRoute>
+              <Videos />
+            </AdminPrivateRoute>
+          }
+        />
+        <Route
+          path="/admin/videos/:id"
+          element={
+            <AdminPrivateRoute>
+              <EditVideo />
+            </AdminPrivateRoute>
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 
