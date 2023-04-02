@@ -18,12 +18,13 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import AdminPrivateRoute from "./components/AdminPrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 import StudentPrivateRoute from "./components/StudentPrivateRoute";
+import AuthenticationCheck from "./components/ui/loaders/AuthenticationCheck";
 import useAuthCheck from "./hooks/useAuthCheck";
 
 function App() {
   const authChecked = useAuthCheck();
   return !authChecked ? (
-    <div>Checking authentication....</div>
+    <AuthenticationCheck />
   ) : (
     <Router>
       <Routes>

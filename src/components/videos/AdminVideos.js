@@ -4,6 +4,8 @@ import {
   useDeleteVideoMutation,
   useGetVideosQuery,
 } from "../../features/videos/videosApi";
+import Error from "../ui/errors/Error";
+import VideoTableLoader from "../ui/loaders/VideoTableLoader";
 
 export default function AdminVideos({ handler }) {
   const [deleteVideo, { isSuccess }] = useDeleteVideoMutation();
@@ -19,11 +21,11 @@ export default function AdminVideos({ handler }) {
   let content = null;
 
   if (isLoading) {
-    content = <div>loading...</div>;
+    content = <VideoTableLoader />;
   } else if (!isLoading && isError) {
-    content = <div>{error?.data}</div>;
+    content = <Error bg="error" message={error?.error} />;
   } else if (!isLoading && !isError && videos?.length === 0) {
-    content = <div>no video found!</div>;
+    content = <Error bg="not-found" message="No Video Found!" />;
   } else if (!isLoading && !isError && videos?.length > 0) {
     content = (
       <table className="divide-y-1 text-base divide-gray-600 w-full">

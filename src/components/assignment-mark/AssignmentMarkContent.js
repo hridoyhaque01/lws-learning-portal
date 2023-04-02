@@ -1,5 +1,7 @@
 import React from "react";
 import { useGetAssignmentsMarkQuery } from "../../features/assignmentmark/assignmentMarkApi";
+import Error from "../ui/errors/Error";
+import AssignmentMarkLoader from "../ui/loaders/AssignmentMarkLoader";
 import AssignmentMarkTableRow from "./AssignmentMarkTableRow";
 
 export default function AssignmentMarkContent() {
@@ -13,16 +15,12 @@ export default function AssignmentMarkContent() {
   const { total, pending, published } = status || {};
 
   if (isLoading) {
-    content = <div>loading...</div>;
+    content = <AssignmentMarkLoader />;
   } else if (!isLoading && isError) {
-    content = <div>{error?.data}</div>;
+    content = <Error bg="error" message={error?.error} />;
   } else if (!isLoading && !isError && assignments?.length === 0) {
-    content = <div>No Assignment found!</div>;
+    content = <Error bg="not-found" message="No Assignment feedback found!" />;
   } else if (!isLoading && !isError && assignments?.length > 0) {
-    // console.log(`row = ${JSON.stringify(assignments[0].status)}`);
-    // console.log(`row = ${JSON.stringify(assignments[1].status)}`);
-    // console.log(`row = ${JSON.stringify(assignments[2].status)}`);
-
     content = (
       <table className="divide-y-1 text-base divide-gray-600 w-full">
         <thead>

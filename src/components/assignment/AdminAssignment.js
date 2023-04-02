@@ -3,6 +3,8 @@ import {
   useDeleteAssignmentMutation,
   useGetAssignmentsQuery,
 } from "../../features/assignment.js/assignmentApi";
+import Error from "../ui/errors/Error";
+import AssignmentLoader from "../ui/loaders/AssignmentLoader";
 import AssignmentTableRow from "./AssignmentTableRow";
 
 export default function AssignmentsContent({ handler }) {
@@ -24,11 +26,11 @@ export default function AssignmentsContent({ handler }) {
   let content = null;
 
   if (isLoading) {
-    content = <div>loading...</div>;
+    content = <AssignmentLoader />;
   } else if (!isLoading && isError) {
-    content = <div>{error?.data}</div>;
+    content = <Error bg="error" message={error?.error} />;
   } else if (!isLoading && !isError && assignments?.length === 0) {
-    content = <div>no video found!</div>;
+    content = <Error bg="not-found" message={"No Assignment found!"} />;
   } else if (!isLoading && !isError && assignments?.length > 0) {
     content = (
       <table className="divide-y-1 text-base divide-gray-600 w-full">

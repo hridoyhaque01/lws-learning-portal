@@ -3,6 +3,8 @@ import {
   useDeleteQuizMutation,
   useGetQuizzesQuery,
 } from "../../features/quiz/quizApi";
+import Error from "../ui/errors/Error";
+import QuizTableLoader from "../ui/loaders/QuizTableLoader";
 import QuizzesTableRow from "./QuizzesTableRow";
 
 export default function AdminQuiz({ handler }) {
@@ -19,11 +21,11 @@ export default function AdminQuiz({ handler }) {
   let content = null;
 
   if (isLoading) {
-    content = <div>loading...</div>;
+    content = <QuizTableLoader />;
   } else if (!isLoading && isError) {
-    content = <div>{error?.data}</div>;
+    content = <Error bg="error" message={error?.error} />;
   } else if (!isLoading && !isError && quizzes?.length === 0) {
-    content = <div>no video found!</div>;
+    content = <Error bg="not-found" message="Quiz not Found!" />;
   } else if (!isLoading && !isError && quizzes?.length > 0) {
     content = (
       <table className="divide-y-1 text-base divide-gray-600 w-full">

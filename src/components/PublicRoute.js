@@ -9,6 +9,6 @@ export default function PublicRoute({ children }) {
   ) : checkRole === "admin" ? (
     <Navigate to="/admin/dashboard" />
   ) : (
-    <Navigate to="/" />
+    <Navigate to="/course" />
   );
 }
