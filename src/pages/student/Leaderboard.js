@@ -1,8 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import Navigation from "../../components/Navigation";
-import LeaderBoardTableRow from "../../components/leaderboard/LeaderBoardTableRow";
-import UserLeaderboardTable from "../../components/leaderboard/UserLeaderboardTable";
+import LeaderboardRow from "../../components/table-components/rows/LeaderboardRow";
+import UserLeaderboardTable from "../../components/table-components/tables/UserLeaderboardTable";
 import Error from "../../components/ui/errors/Error";
 import LeaderboardLoader from "../../components/ui/loaders/LeaderboardLoader";
 import { selectId } from "../../features/auth/authSelectors";
@@ -47,7 +47,7 @@ export default function Leaderboard() {
 
             <tbody>
               {data.map((student) => (
-                <LeaderBoardTableRow studentData={student} key={student.id} />
+                <LeaderboardRow studentData={student} key={student.id} />
               ))}
             </tbody>
           </table>

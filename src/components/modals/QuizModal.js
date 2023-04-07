@@ -5,9 +5,9 @@ import {
   useEditQuizMutation,
 } from "../../features/quiz/quizApi";
 import { useGetVideosQuery } from "../../features/videos/videosApi";
-import Checkbox from "../ui/Checkbox";
-import ModalInput from "../ui/ModalInput";
-import OptionInput from "../ui/OptionInput";
+import Checkbox from "../ui/inputes/Checkbox";
+import ModalInput from "../ui/inputes/ModalInput";
+import OptionInput from "../ui/inputes/OptionInput";
 
 export default function QuizModal({ open, control }) {
   const { type, page, quiz } = useSelector((state) => state.quiz);

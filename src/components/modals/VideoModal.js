@@ -1,14 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  assignmentApi,
+  useGetAssignmentsQuery,
+} from "../../features/assignment/assignmentApi";
+import { quizApi, useGetQuizzesQuery } from "../../features/quiz/quizApi";
 import {
   useAddVideoMutation,
   useEditVideoMutation,
 } from "../../features/videos/videosApi";
-import ModalInput from "../ui/ModalInput";
-import TextArea from "../ui/TextArea";
+import {
+  selectVideo,
+  selectVideoType,
+  selectVideosModal,
+  selectVideosPage,
+} from "../../features/videos/videosSelectors";
+import { setVideo } from "../../features/videos/videosSlice";
+import Error from "../ui/errors/Error";
+import ModalInput from "../ui/inputes/ModalInput";
+import TextArea from "../ui/inputes/TextArea";
 
-export default function VideoModal({ open, control }) {
-  const { type, page, video } = useSelector((state) => state.videos);
+export default function VideoModal() {
+  const type = useSelector(selectVideoType);
+  const video = useSelector(selectVideo);
+  const page = useSelector(selectVideosPage);
+  const modal = useSelector(selectVideosModal);
+
+  const dispatch = useDispatch();
+
   const [formValue, setFormValue] = useState({
     title: "",
     description: "",
@@ -17,10 +36,28 @@ export default function VideoModal({ open, control }) {
     url: "",
   });
 
-  const [editVideo, { isSuccess: editSuccess, isLoading: addLoading }] =
-    useEditVideoMutation();
-  const [addVideo, { isSuccess: addSuccess, isLoading: editLoading }] =
-    useAddVideoMutation();
+  const [
+    editVideo,
+    {
+      isSuccess: editSuccess,
+      isLoading: addLoading,
+      isError: isEditResponseError,
+      error: editResponseError,
+    },
+  ] = useEditVideoMutation();
+
+  const { data: assignments } = useGetAssignmentsQuery({ page });
+  const { data: quizzes } = useGetQuizzesQuery({});
+
+  const [
+    addVideo,
+    {
+      isSuccess: addSuccess,
+      isLoading: editLoading,
+      isError: isAddResponseError,
+      error: addResponseError,
+    },
+  ] = useAddVideoMutation();
 
   const resetForm = () => {
     setFormValue({
@@ -53,6 +90,44 @@ export default function VideoModal({ open, control }) {
         },
         page,
       });
+
+      if (assignments?.response?.length > 0) {
+        const findAssignment = assignments.response.find(
+          (assignment) => assignment?.video_id === formValue?.id
+        );
+
+        if (findAssignment) {
+          const assignmentId = Number(findAssignment.id);
+          const video_title = formValue?.title;
+          dispatch(
+            assignmentApi.endpoints.editAssignment.initiate({
+              id: assignmentId,
+              data: { video_title },
+              page,
+            })
+          );
+        }
+      }
+
+      if (quizzes?.response?.length > 0) {
+        const videoRelatedQuizzes = quizzes.response.filter(
+          (quiz) => quiz?.video_id === formValue?.id
+        );
+        if (videoRelatedQuizzes?.length > 0) {
+          videoRelatedQuizzes.forEach((videoQuiz) => {
+            const id = videoQuiz?.id;
+            const video_title = formValue?.title;
+            dispatch(
+              quizApi.endpoints.editQuiz.initiate({
+                id,
+                data: { video_title },
+                page: undefined,
+              })
+            );
+          });
+        }
+      }
+      // dispatch(assignmentApi.endpoints.editAssignment({id, data, page}))
     }
 
     if (type === "add") {
@@ -71,6 +146,19 @@ export default function VideoModal({ open, control }) {
     setFormValue({ ...formValue, [e.target.name]: e.target.value });
   };
 
+  // control the modal
+
+  const handleModal = () => {
+    dispatch(setVideo({ videosModal: false }));
+  };
+
+  useEffect(() => {
+    if (editSuccess || addSuccess) {
+      handleModal();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editSuccess, addSuccess]);
+
   // check modal type and set the form
 
   useEffect(() => {
@@ -88,25 +176,16 @@ export default function VideoModal({ open, control }) {
     }
   }, [video, type]);
 
-  // control the modal
-
-  useEffect(() => {
-    if (editSuccess || addSuccess) {
-      control();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editSuccess, addSuccess]);
-
   return (
-    open && (
+    modal && (
       <>
         <div
-          onClick={control}
+          onClick={handleModal}
           className="fixed top-0 left-0 w-full h-full inset-0 z-10 bg-secondary-400 cursor-pointer"
         ></div>
         <div className="rounded-md w-500 lg:w-[600px] space-y-6 bg-secondary p-8 absolute position-center z-20 shadow-md border border-slate-50/10 ">
           <div className="absolute top-1 right-1 ">
-            <button className="" type="button" onClick={control}>
+            <button className="" type="button" onClick={handleModal}>
               <svg
                 viewBox="0 0 15 15"
                 fill="none"
@@ -184,6 +263,16 @@ export default function VideoModal({ open, control }) {
               </button>
             </div>
           </form>
+
+          {/* show  error  */}
+
+          {isEditResponseError && (
+            <Error bg="error" message={editResponseError?.data} />
+          )}
+
+          {isAddResponseError && (
+            <Error bg="error" message={addResponseError?.data} />
+          )}
         </div>
       </>
     )

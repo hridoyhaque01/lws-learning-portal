@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../features/auth/authApi";
 import { selectError } from "../../features/auth/authSelectors";
 import useAuth from "../../hooks/useAuth";
-import SubmitButton from "../ui/SubmitButton";
-import TextInput from "../ui/TextInput";
-import TextLink from "../ui/TextLink";
 import Error from "../ui/errors/Error";
+import SubmitButton from "../ui/inputes/SubmitButton";
+import TextInput from "../ui/inputes/TextInput";
+import TextLink from "../ui/inputes/TextLink";
 
 export default function SigninForm({ user }) {
   const [login, { error: responseError }] = useLoginMutation();
@@ -21,15 +21,17 @@ export default function SigninForm({ user }) {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  //handle form submit
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const role = user === "admin" ? "admin" : "student";
     login({ data, role });
   };
 
-  useEffect(() => {
-    console.log(responseError);
+  //check error and redicrect if it's not
 
+  useEffect(() => {
     if (responseError?.data) {
       setError(responseError?.data);
     } else if (checkRole === "admin") {
@@ -74,7 +76,6 @@ export default function SigninForm({ user }) {
           <TextLink link="/registration" name="Create New Account" />
         )}
       </div>
-
       <div>
         <SubmitButton name="Sign in" />
       </div>

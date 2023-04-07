@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navigation from "../../components/Navigation";
-import AdminAssignment from "../../components/assignment/AdminAssignment";
-import AdminAssignmentModal from "../../components/modals/AdminAssignmentModal";
+import AssignmentModal from "../../components/modals/AssignmentModal";
+import AssignmentTable from "../../components/table-components/tables/AssignmentTable";
 
 export default function Assignment() {
   const [openedModal, setOpenedModal] = useState(false);
@@ -20,9 +20,9 @@ export default function Assignment() {
 
       <section className="py-6 bg-primary">
         <div className="mx-auto max-w-full px-5 lg:px-20">
-          <AdminAssignment control={openModal} />
+          <AssignmentTable control={openModal} />
         </div>
-        <AdminAssignmentModal open={openedModal} control={closeModal} />
+        <AssignmentModal open={openedModal} control={closeModal} />
       </section>
     </>
   );

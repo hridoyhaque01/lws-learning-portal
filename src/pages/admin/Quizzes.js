@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navigation from "../../components/Navigation";
 import QuizModal from "../../components/modals/QuizModal";
-import AdminQuiz from "../../components/quizzes/AdminQuiz";
+import QuizTable from "../../components/table-components/tables/QuizTable";
 
 export default function Quizzes() {
   const [openedModal, setOpenedModal] = useState(false);
@@ -20,7 +20,7 @@ export default function Quizzes() {
 
       <section className="py-6 bg-primary">
         <div className="mx-auto max-w-full px-5 lg:px-20">
-          <AdminQuiz control={openModal} />
+          <QuizTable control={openModal} />
         </div>
         <QuizModal open={openedModal} control={closeModal} />
       </section>

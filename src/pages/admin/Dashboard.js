@@ -11,6 +11,8 @@ export default function Dashboard() {
         <div className="mx-auto max-w-7xl px-5 lg:px-0">
           <div className="px-3 md:lg:xl:px-40  py-20 bg-opacity-10">
             <div className="grid grid-cols-1 md:grid-cols-2  gap-6 p-8">
+              {/* admin videos  */}
+
               <Link to="/admin/videos" className="dashboard-item-card">
                 <svg
                   fill="none"
@@ -27,6 +29,8 @@ export default function Dashboard() {
 
                 <p className="text-slate-200 mt-3 ">Videos</p>
               </Link>
+
+              {/* admin assignment  */}
 
               <Link to="/admin/assignment" className="dashboard-item-card">
                 <svg
@@ -47,6 +51,8 @@ export default function Dashboard() {
                 <p className="text-slate-200 mt-3">Assignment</p>
               </Link>
 
+              {/* admin quizzes  */}
+
               <Link to="/admin/quizzes" className="dashboard-item-card">
                 <svg
                   fill="none"
@@ -63,6 +69,8 @@ export default function Dashboard() {
                 </svg>
                 <p className="text-slate-200 mt-3 ">Quizzes</p>
               </Link>
+
+              {/* admin marks  */}
 
               <Link to="/admin/marks" className="dashboard-item-card">
                 <svg

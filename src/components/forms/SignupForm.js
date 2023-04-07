@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "../../features/auth/authApi";
 import useAuth from "../../hooks/useAuth";
-import SubmitButton from "../ui/SubmitButton";
-import TextInput from "../ui/TextInput";
-import TextLink from "../ui/TextLink";
 import Error from "../ui/errors/Error";
+import SubmitButton from "../ui/inputes/SubmitButton";
+import TextInput from "../ui/inputes/TextInput";
+import TextLink from "../ui/inputes/TextLink";
 
 export default function SignupForm() {
   const [register, { error: responseError, isError, isLoading }] =

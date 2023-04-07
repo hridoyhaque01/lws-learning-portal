@@ -123,6 +123,13 @@ export const assignmentMarkApi = apiSlice.injectEndpoints({
         } catch (err) {}
       },
     }),
+    deleteAssignmentMark: builder.mutation({
+      query: (id) => ({
+        url: `/assignmentMark/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["assignmentMark"],
+    }),
   }),
 });
 
@@ -131,4 +138,5 @@ export const {
   useEditAssignmentMarkMutation,
   useGetAssignmentUserQuery,
   useSubmitAssignmentMutation,
+  useDeleteAssignmentMarkMutation,
 } = assignmentMarkApi;

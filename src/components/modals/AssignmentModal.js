@@ -1,37 +1,126 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useSubmitAssignmentMutation } from "../../features/assignmentmark/assignmentMarkApi";
-import { selectAssignmentInfo } from "../../features/assignmentmark/assignmentSelectors";
+import {
+  useAddAssignmentMutation,
+  useEditAssignmentMutation,
+} from "../../features/assignment/assignmentApi";
+import { useGetAssignmentVideosQuery } from "../../features/videos/videosApi";
 import Error from "../ui/errors/Error";
+import ModalInput from "../ui/inputes/ModalInput";
 
 export default function AssignmentModal({ open, control }) {
-  const [input, setInput] = useState("");
-  const assingnmentInfo = useSelector(selectAssignmentInfo);
-  const [submitAssignment, { isLoading, isError, isSuccess }] =
-    useSubmitAssignmentMutation();
+  const { type, page, assignment } = useSelector((state) => state.assignment);
+
+  const [videoLength, setVideoLength] = useState(0);
+
+  const [formData, setFormData] = useState({
+    title: "",
+    video_title: "",
+    video_id: null,
+    totalMark: null,
+  });
+
+  const { data, isLoading, isError, error } = useGetAssignmentVideosQuery();
+
+  const { videos } = data || {};
+
+  const [addAssignment, { isSuccess: addSuccess, isLoading: addLoading }] =
+    useAddAssignmentMutation();
+
+  const [editAssignment, { isSuccess: editSuccess, isLoading: editLoading }] =
+    useEditAssignmentMutation();
+
+  // decide what to render
+
+  let content = null;
+
+  if (isLoading) {
+    content = <div className="skeleton-item w-full h-8"></div>;
+  } else if (!isLoading && isError) {
+    content = <Error bg="error" message={error?.data} />;
+  } else if (!isLoading && !isError && videos?.length === 0) {
+    content = <div>No Videos Was Found!</div>;
+  } else if (!isLoading && !isError && videos?.length > 0) {
+    content = (
+      <select
+        name="video_title"
+        id="video_title"
+        required
+        className="edit-input rounded-md"
+        value={formData.video_title}
+        onChange={(e) => handleChange(e)}
+      >
+        <option value="" hidden>
+          Select Video
+        </option>
+        {videos.map((video) => {
+          const { id, title } = video || {};
+          const parseTitle =
+            title?.length >= 40 ? title.slice(0, 40) + "..." : title;
+          return (
+            <option key={id} video_id={id} value={`${title}`}>
+              {parseTitle}
+            </option>
+          );
+        })}
+      </select>
+    );
+  }
+
+  // handle submit form
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const date = new Date();
-    const isoTime = date.toISOString();
+    if (type === "add") {
+      addAssignment({ ...formData, totalMark: Number(formData.totalMark) });
+    } else if (type === "edit") {
+      editAssignment({
+        id: assignment?.id,
+        data: { ...formData, totalMark: Number(formData.totalMark) },
+        page,
+      });
+    }
 
-    const submittedObj = {
-      ...assingnmentInfo,
-      createdAt: isoTime,
-      mark: 0,
-      repo_link: input,
-      status: "pending",
-    };
+    resetForm();
+  };
 
-    submitAssignment(submittedObj);
+  // handle the input field
+
+  const handleChange = (e) => {
+    // const { name, value } = e.target;
+    // if (name === "video_title") {
+    //   const video = videos.find((v) => v.title === value);
+    //   setFormData({ ...formData, [name]: value, video_id: video?.id });
+    // } else {
+    //   setFormData({ ...formData, [name]: value });
+    // }
+  };
+
+  // reset form data
+
+  const resetForm = () => {
+    setFormData({
+      title: "",
+      video_title: "",
+      video_id: null,
+      totalMark: "",
+    });
   };
 
   useEffect(() => {
-    if (isSuccess) {
+    if (assignment?.id && type === "edit") {
+      setFormData(assignment);
+    } else {
+      resetForm();
+    }
+  }, [assignment, type]);
+
+  useEffect(() => {
+    if (editSuccess || addSuccess) {
       control();
     }
-  }, [isSuccess]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editSuccess, addSuccess]);
 
   return (
     open && (
@@ -60,38 +149,44 @@ export default function AssignmentModal({ open, control }) {
             </button>
           </div>
           <h2 className=" text-center text-3xl font-extrabold text-white">
-            এসাইনমেন্ট জমা দিন
+            {type === "add" ? "Add" : "Edit"} Assignment
           </h2>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            <div className="rounded-md shadow-sm space-y-px">
-              <div className="flex flex-col space-y-2">
-                <label htmlFor="to">গিটহাব রিপোসিটরি লিঙ্ক *</label>
-                <input
-                  id="to"
-                  name="to"
-                  type="text"
-                  required
-                  placeholder="Github repo link..."
-                  className="appearance-none relative block w-full px-3 py-3 bg-slate-900 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-violet-500 focus:border-violet-500 focus:z-10 sm:text-sm bg-slate-800"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                />
+            <div className="rounded-md shadow-sm  space-y-2">
+              <ModalInput
+                id="title"
+                title="Title"
+                type="text"
+                placeholder="enter video title..."
+                value={formData.title}
+                onChange={(e) => handleChange(e)}
+              />
+              <div className="flex items-center justify-between">
+                <label className="nowrap" htmlFor="videoTitle">
+                  Video Title :
+                </label>
+                {content}
               </div>
+
+              <ModalInput
+                id="totalMark"
+                title="totalMark"
+                type="number"
+                placeholder="enter assignment total mark..."
+                value={formData.totalMark}
+                onChange={(e) => handleChange(e)}
+              />
             </div>
 
             <div>
               <button
-                disabled={isLoading}
+                disabled={addLoading || editLoading || videoLength === 0}
                 type="submit"
                 className="group  relative w-full flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500"
               >
-                এসাইনমেন্ট জমা দিন
+                {type === "add" ? "Add Assignment" : "Update Assignment"}
               </button>
             </div>
-
-            {!isLoading && isError && (
-              <Error message="Failed to Submit Assignment" />
-            )}
           </form>
         </div>
       </>

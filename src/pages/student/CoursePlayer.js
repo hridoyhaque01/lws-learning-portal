@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Navigation from "../../components/Navigation";
-import AssignmentModal from "../../components/modals/AssignmentModal";
-import VideoList from "../../components/relativeVideos/VideoList";
+import SubmitAssignmentModal from "../../components/modals/SubmitAssignmentModal";
+import VideoList from "../../components/page-conponents/VideoList";
 import { selectId, selectName } from "../../features/auth/authSelectors";
 import {
   useGetPlayerVideoQuery,
   useGetVideoQuery,
 } from "../../features/videos/videosApi";
 
-import Player from "../../components/player/Player";
+import VideoPlayer from "../../components/page-conponents/VideoPlayer";
 import Error from "../../components/ui/errors/Error";
 import VideoPlayerLoader from "../../components/ui/loaders/VideoPlayerLoader";
 import { loadAssignmentInfo } from "../../features/assignmentmark/assignmentMarkSlice";
@@ -109,7 +109,7 @@ export default function CoursePlayer() {
   } else if (!isLoading && !isError && !allData?.video?.id) {
     content = <Error bg="not-found" message={"No videos Found!"} />;
   } else if (!isLoading && !isError && allData?.video?.id) {
-    content = <Player control={controlModal} data={allData} />;
+    content = <VideoPlayer control={controlModal} data={allData} />;
   }
 
   return (
@@ -126,7 +126,7 @@ export default function CoursePlayer() {
           </div>
         </div>
       </section>
-      <AssignmentModal open={opened} control={controlModal} />
+      <SubmitAssignmentModal open={opened} control={controlModal} />
     </>
   );
 }

@@ -38,11 +38,15 @@ export const quizApi = apiSlice.injectEndpoints({
             dispatch(
               apiSlice.util.updateQueryData(
                 "getQuizzes",
-                { page, limit: quizLimit },
+
+                { page, limit: undefined },
                 (draft) => {
+                  console.log(JSON.parse(JSON.stringify(draft)));
                   const index = draft.response.findIndex(
                     (video) => video.id === data?.id
                   );
+
+                  console.log(index);
                   if (index !== -1) {
                     draft.response[index] = data;
                   }
@@ -62,7 +66,7 @@ export const quizApi = apiSlice.injectEndpoints({
       invalidatesTags: ["quizzes"],
     }),
     deleteQuiz: builder.mutation({
-      query: ({ id, page }) => ({
+      query: (id) => ({
         url: `/quizzes/${id}`,
         method: "DELETE",
       }),

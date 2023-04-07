@@ -68,6 +68,33 @@
       "views": "91.2K",
       "duration": "31:30",
       "createdAt": "2023-02-24T17:59:00.000Z"
+    },
+    {
+      "title": "Facing the Future: The Truth About Artificial Intelligence and Our Jobs - Bangla",
+      "description": "This video explores the impact of artificial intelligence on employment, examining the history of automation and the current state of AI technology. The video aims to provide a balanced perspective on the topic, helping viewers understand the truth about AI's impact on jobs and offering advice on how to prepare for the changing job market. This video also answers the most common questions asked by programmers worldwide - \"Will AI take my job?\"",
+      "views": "9.50k",
+      "duration": "40:50",
+      "url": "https://youtu.be/BihZd2x8Qh8",
+      "createdAt": "2023-04-01T13:34:30.851Z",
+      "id": 4
+    },
+    {
+      "title": "What is Server Side Rendering - Say hi to Next.js - Bangla ( বাংলা ) Tutorial",
+      "description": "আপনাদের অনেকেই আমাকে বারবার request করেছেন, Server Side Rendering কি জিনিস সেটা বুঝিয়ে একটা ভিডিও দিতে। সেই সাথে বর্তমান সময়ের trending react framework - Next.js কিভাবে কাজ করে, কেন ব্যবহার করব এসব নিয়ে ভিডিও request করেছিলেন অনেকে। তাই আজকের ভিডিওটি আমি আপনাদের request এ তৈরী করলাম।\nএই ভিডিওতে একদম সহজ ভাষায় আমি বুঝানোর চেষ্টা করেছি Server Side Rendering (SSR) কি। সেই সাথে Next.js কি, কিভাবে কাজ করে, এটা ব্যবহার করলে কি কি সুবিধা, Gatsby এর সাথে এটার পার্থক্য কি, এটার কি কি aswesome features আছে ইত্যাদি নিয়ে বিস্তারিত বলেছি। আশা করি আজকের ভিডিও দেখলে Server Side Rendering, Client Side Rendering (CSR) এবং Pre-rendering নিয়ে আপনাদের আর কোন confusion থাকবেনা।",
+      "views": "26k",
+      "duration": "34:36",
+      "url": "https://youtu.be/721mxZ3XHf8",
+      "createdAt": "2023-04-01T18:53:12.886Z",
+      "id": 5
+    },
+    {
+      "title": "Demo",
+      "description": "122",
+      "views": "121k",
+      "duration": "121:00",
+      "url": "https://youtu.be/BihZd2x8Qh8",
+      "createdAt": "2023-04-07T19:07:11.523Z",
+      "id": 6
     }
   ],
   "assignments": [
@@ -84,6 +111,13 @@
       "video_id": 2,
       "video_title": "#2 JavaScript Tips and Tricks - JavaScript Job Interview Questions",
       "totalMark": 100
+    },
+    {
+      "title": "bounce Function in JavaScript - JavaScript Job Interview question",
+      "video_title": "What is Server Side Rendering - Say hi to Next.js - Bangla ( বাংলা ) Tutorial",
+      "video_id": 5,
+      "totalMark": 100,
+      "id": 3
     }
   ],
   "quizzes": [
@@ -94,12 +128,12 @@
       "video_title": "Debounce Function in JavaScript - JavaScript Job Interview question",
       "options": [
         {
-          "id": "1",
+          "id": 1,
           "option": "A function that is called after a certain time interval",
           "isCorrect": true
         },
         {
-          "id": "2",
+          "id": 2,
           "option": "A function that is called after a certain time interval",
           "isCorrect": false
         },
@@ -122,12 +156,12 @@
       "video_title": "Debounce Function in JavaScript - JavaScript Job Interview question",
       "options": [
         {
-          "id": "1",
+          "id": 1,
           "option": "A search bar where the results are displayed as you type.",
           "isCorrect": true
         },
         {
-          "id": "2",
+          "id": 2,
           "option": "A button that performs an action when clicked.",
           "isCorrect": false
         },
@@ -170,6 +204,34 @@
           "isCorrect": false
         }
       ]
+    },
+    {
+      "question": "question 1 test",
+      "video_title": "What is Server Side Rendering - Say hi to Next.js - Bangla ( বাংলা ) Tutorial",
+      "video_id": 5,
+      "options": [
+        {
+          "id": 1,
+          "option": "option 1",
+          "isCorrect": true
+        },
+        {
+          "id": 2,
+          "option": "option 2",
+          "isCorrect": true
+        },
+        {
+          "id": 3,
+          "option": "option 3",
+          "isCorrect": false
+        },
+        {
+          "id": 4,
+          "option": "option 4",
+          "isCorrect": false
+        }
+      ],
+      "id": 4
     }
   ],
   "assignmentMark": [
@@ -208,6 +270,18 @@
       "mark": 50,
       "repo_link": "https://github.com/Learn-with-Sumit/assignment-1",
       "status": "published"
+    },
+    {
+      "assignment_id": 1,
+      "student_id": 3,
+      "student_name": "Akash Ahmed",
+      "title": "Assignment 1 - Implement Debounce Function",
+      "totalMark": 100,
+      "createdAt": "2023-04-06T13:35:05.785Z",
+      "mark": 100,
+      "repo_link": "test repo",
+      "status": "published",
+      "id": 4
     }
   ],
   "quizMark": [
@@ -222,6 +296,54 @@
       "totalWrong": 1,
       "totalMark": 10,
       "mark": 5
+    },
+    {
+      "student_id": 3,
+      "student_name": "Akash Ahmed",
+      "video_id": 1,
+      "video_title": "Debounce Function in JavaScript - JavaScript Job Interview question",
+      "totalQuiz": 2,
+      "totalCorrect": 2,
+      "totalWrong": 0,
+      "totalMark": 10,
+      "mark": 10,
+      "id": 2
+    },
+    {
+      "student_id": 5,
+      "student_name": "Ferdous",
+      "video_id": 2,
+      "video_title": "#2 JavaScript Tips and Tricks - JavaScript Job Interview Questions",
+      "totalQuiz": 1,
+      "totalCorrect": 1,
+      "totalWrong": 0,
+      "totalMark": 5,
+      "mark": 5,
+      "id": 3
+    },
+    {
+      "student_id": 4,
+      "student_name": "Mohammad Salahuddin",
+      "video_id": 1,
+      "video_title": "Debounce Function in JavaScript - JavaScript Job Interview question",
+      "totalQuiz": 2,
+      "totalCorrect": 1,
+      "totalWrong": 1,
+      "totalMark": 10,
+      "mark": 5,
+      "id": 4
+    },
+    {
+      "student_id": 4,
+      "student_name": "Mohammad Salahuddin",
+      "video_id": 2,
+      "video_title": "#2 JavaScript Tips and Tricks - JavaScript Job Interview Questions",
+      "totalQuiz": 1,
+      "totalCorrect": 1,
+      "totalWrong": 0,
+      "totalMark": 5,
+      "mark": 5,
+      "id": 5
     }
   ]
 }

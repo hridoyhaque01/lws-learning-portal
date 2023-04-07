@@ -1,6 +1,6 @@
 import React from "react";
 import Navigation from "../../components/Navigation";
-import AssignmentMarkContent from "../../components/assignment-mark/AssignmentMarkContent";
+import AssignmentMarkTable from "../../components/table-components/tables/AssignmentMarkTable";
 
 export default function AssignmentMark() {
   return (
@@ -9,7 +9,7 @@ export default function AssignmentMark() {
 
       <section className="py-6 bg-primary">
         <div className="mx-auto max-w-full px-5 lg:px-20">
-          <AssignmentMarkContent />
+          <AssignmentMarkTable />
         </div>
       </section>
     </>

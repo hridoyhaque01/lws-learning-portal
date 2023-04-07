@@ -1,25 +1,21 @@
 import React from "react";
-import AdminLogin from "./pages/admin/AdminLogin";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import PrivateRouteAdmin from "./components/PrivateRouteAdmin";
+import PrivateRouteStudent from "./components/PrivateRouteStudent";
+import PublicRoute from "./components/PublicRoute";
+import AuthenticationCheck from "./components/ui/loaders/AuthenticationCheck";
+import useAuthCheck from "./hooks/useAuthCheck";
 import Assignment from "./pages/admin/Assignment";
 import AssignmentMark from "./pages/admin/AssignmentMark";
 import Dashboard from "./pages/admin/Dashboard";
-import EditAssignment from "./pages/admin/EditAssignment";
-import EditQuiz from "./pages/admin/EditQuiz";
-import EditVideo from "./pages/admin/EditVideo";
+import LoginAdmin from "./pages/admin/LoginAdmin";
 import Quizzes from "./pages/admin/Quizzes";
 import Videos from "./pages/admin/Videos";
 import CoursePlayer from "./pages/student/CoursePlayer";
 import Leaderboard from "./pages/student/Leaderboard";
+import LoginStudent from "./pages/student/LoginStudent";
 import Quiz from "./pages/student/Quiz";
-import StudentLogin from "./pages/student/StudentLogin";
-import StudentRegistration from "./pages/student/StudentRegistration";
-
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import AdminPrivateRoute from "./components/AdminPrivateRoute";
-import PublicRoute from "./components/PublicRoute";
-import StudentPrivateRoute from "./components/StudentPrivateRoute";
-import AuthenticationCheck from "./components/ui/loaders/AuthenticationCheck";
-import useAuthCheck from "./hooks/useAuthCheck";
+import RegistrationStudent from "./pages/student/RegistrationStudent";
 
 function App() {
   const authChecked = useAuthCheck();
@@ -32,7 +28,7 @@ function App() {
           path="/"
           element={
             <PublicRoute>
-              <StudentLogin />
+              <LoginStudent />
             </PublicRoute>
           }
         />
@@ -40,7 +36,7 @@ function App() {
           path="/registration"
           element={
             <PublicRoute>
-              <StudentRegistration />
+              <RegistrationStudent />
             </PublicRoute>
           }
         />
@@ -48,97 +44,75 @@ function App() {
         <Route
           path="/courses/:videoId?"
           element={
-            <StudentPrivateRoute>
+            <PrivateRouteStudent>
               <CoursePlayer />
-            </StudentPrivateRoute>
+            </PrivateRouteStudent>
           }
         />
         <Route
           path="/leaderboard"
           element={
-            <StudentPrivateRoute>
+            <PrivateRouteStudent>
               <Leaderboard />
-            </StudentPrivateRoute>
+            </PrivateRouteStudent>
           }
         />
         <Route
           path="/quiz/:quizId"
           element={
-            <StudentPrivateRoute>
+            <PrivateRouteStudent>
               <Quiz />
-            </StudentPrivateRoute>
+            </PrivateRouteStudent>
           }
         />
         <Route
           path="/admin"
           element={
             <PublicRoute>
-              <AdminLogin />
+              <LoginAdmin />
             </PublicRoute>
           }
         />
         <Route
           path="/admin/assignment"
           element={
-            <AdminPrivateRoute>
+            <PrivateRouteAdmin>
               <Assignment />
-            </AdminPrivateRoute>
+            </PrivateRouteAdmin>
           }
         />
-        <Route
-          path="/admin/assignment/:id"
-          element={
-            <AdminPrivateRoute>
-              <EditAssignment />
-            </AdminPrivateRoute>
-          }
-        />
+
         <Route
           path="/admin/marks"
           element={
-            <AdminPrivateRoute>
+            <PrivateRouteAdmin>
               <AssignmentMark />
-            </AdminPrivateRoute>
+            </PrivateRouteAdmin>
           }
         />
         <Route
           path="/admin/quizzes"
           element={
-            <AdminPrivateRoute>
+            <PrivateRouteAdmin>
               <Quizzes />
-            </AdminPrivateRoute>
+            </PrivateRouteAdmin>
           }
         />
-        <Route
-          path="/admin/quizzes/:idc"
-          element={
-            <AdminPrivateRoute>
-              <EditQuiz />
-            </AdminPrivateRoute>
-          }
-        />
+
         <Route
           path="/admin/dashboard"
           element={
-            <AdminPrivateRoute>
+            <PrivateRouteAdmin>
               <Dashboard />
-            </AdminPrivateRoute>
+            </PrivateRouteAdmin>
           }
         />
         <Route
           path="/admin/videos"
           element={
-            <AdminPrivateRoute>
+            <PrivateRouteAdmin>
               <Videos />
-            </AdminPrivateRoute>
-          }
-        />
-        <Route
-          path="/admin/videos/:id"
-          element={
-            <AdminPrivateRoute>
-              <EditVideo />
-            </AdminPrivateRoute>
+            </PrivateRouteAdmin>
           }
         />
       </Routes>

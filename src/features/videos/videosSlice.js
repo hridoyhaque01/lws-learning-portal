@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  type: "",
-  page: 1,
+  videoType: "",
+  videosPage: 1,
   video: {},
   videoPlayer: {},
+  videosModal: false,
 };
 
 const videosSlice = createSlice({
@@ -19,4 +20,4 @@ const videosSlice = createSlice({
 });
 
 export default videosSlice.reducer;
-export const { setVideo } = videosSlice.actions;
+export const { setVideo, controlVideoModal } = videosSlice.actions;

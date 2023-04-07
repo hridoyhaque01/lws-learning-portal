@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Navigation from "../../components/Navigation";
-import QuizContent from "../../components/quiz/QuizContent";
 import Error from "../../components/ui/errors/Error";
 import QuizLoader from "../../components/ui/loaders/QuizLoader";
 import { useGetAllQuizQuery } from "../../features/quiz/quizApi";
 
+import QuizList from "../../components/page-conponents/QuizList";
 import { selectId, selectName } from "../../features/auth/authSelectors";
 import { quizMarkApi } from "../../features/quizMark.js/quizMarkApi";
 import {
@@ -136,9 +136,7 @@ export default function Quiz() {
   } else if (!isLoading && !isError && questions?.length === 0) {
     content = <Error bg="not-found" message="No Quiz Found!" />;
   } else if (!isLoading && !isError && questions?.length > 0) {
-    content = (
-      <QuizContent currentQuestion={currentQuestion} quizzes={quizzes} />
-    );
+    content = <QuizList currentQuestion={currentQuestion} quizzes={quizzes} />;
   }
 
   return (

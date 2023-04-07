@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "../features/api/apiSlice";
-import assinmentReducer from "../features/assignment.js/assignmentSlice";
+import assinmentReducer from "../features/assignment/assignmentSlice";
 import assignmentMarkReducer from "../features/assignmentmark/assignmentMarkSlice";
 import authReducer from "../features/auth/authSlice";
 import quizReducer from "../features/quiz/quizSlice";

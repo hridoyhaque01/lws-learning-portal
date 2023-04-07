@@ -1,10 +1,12 @@
 import { apiSlice } from "../api/apiSlice";
 
+const videoLimit = Number(process.env.REACT_APP_VIDEOS_PER_PAGE);
+
 export const videosApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getVideos: builder.query({
-      query: (page = 1) => ({
-        url: `/videos?_page=${page}&_sort=createdAt&_limit=${process.env.REACT_APP_VIDEOS_PER_PAGE}`,
+      query: ({ page = 1, limit }) => ({
+        url: `/videos?_page=${page}&_sort=createdAt&_limit=${limit}`,
       }),
       providesTags: ["videos"],
       transformResponse: (response, meta) => {
@@ -84,6 +86,28 @@ export const videosApi = apiSlice.injectEndpoints({
         return { data };
       },
     }),
+    getAssignmentVideos: builder.query({
+      queryFn: async (
+        args,
+        { signal, dispatch, getState },
+        extraOptions,
+        baseQuery
+      ) => {
+        const { data: videos } = await baseQuery(`/videos`);
+        const { data: assignments } = await baseQuery(`/assignments`);
+
+        const filterVideos = videos.filter((video) =>
+          assignments.every((assignment) => video.id !== assignment?.video_id)
+        );
+
+        const data = {
+          videos: filterVideos,
+        };
+
+        return { data };
+      },
+      providesTags: ["getAssignmentVideos"],
+    }),
     editVideo: builder.mutation({
       query: ({ id, data, page }) => ({
         url: `/videos/${id}`,
@@ -96,14 +120,18 @@ export const videosApi = apiSlice.injectEndpoints({
           const { data } = await queryFulfilled;
           if (data?.id) {
             dispatch(
-              apiSlice.util.updateQueryData("getVideos", page, (draft) => {
-                const index = draft.response.findIndex(
-                  (video) => video.id === data?.id
-                );
-                if (index !== -1) {
-                  draft.response[index] = data;
+              apiSlice.util.updateQueryData(
+                "getVideos",
+                { page, limit: videoLimit },
+                (draft) => {
+                  const index = draft.response.findIndex(
+                    (video) => video.id === data?.id
+                  );
+                  if (index !== -1) {
+                    draft.response[index] = data;
+                  }
                 }
-              })
+              )
             );
           }
         } catch (err) {}
@@ -115,10 +143,10 @@ export const videosApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["videos"],
+      invalidatesTags: ["videos", "getAssignmentVideos"],
     }),
     deleteVideo: builder.mutation({
-      query: ({ id, page }) => ({
+      query: (id) => ({
         url: `/videos/${id}`,
         method: "DELETE",
       }),
@@ -134,5 +162,6 @@ export const {
   useAddVideoMutation,
   useDeleteVideoMutation,
   useGetPlayerVideoQuery,
+  useGetAssignmentVideosQuery,
   useGetVideoQuery,
 } = videosApi;
