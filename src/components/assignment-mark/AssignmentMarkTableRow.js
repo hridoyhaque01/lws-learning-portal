@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useAddAssignmentMarkMutation } from "../../features/assignmentmark/assignmentMarkApi";
+import { useEditAssignmentMarkMutation } from "../../features/assignmentmark/assignmentMarkApi";
 import getLocalDate from "../../utils/getLocalDate";
 
-export default function AssignmentMarkTableRow({ assignment }) {
+export default function AssignmentMarkTableRow({ assignment, page }) {
   const {
     title,
     createdAt,
@@ -24,13 +24,14 @@ export default function AssignmentMarkTableRow({ assignment }) {
     }
   };
 
-  const [addAssignmentMark, { isLoading }] = useAddAssignmentMarkMutation();
+  const [editAssignmentMark, { isLoading }] = useEditAssignmentMarkMutation();
 
   const handleSubmit = () => {
     if (value !== "") {
-      addAssignmentMark({
+      editAssignmentMark({
         id,
         data: { mark: Number(value), status: "published" },
+        page,
       });
     }
   };

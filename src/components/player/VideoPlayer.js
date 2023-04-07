@@ -7,9 +7,9 @@ export default function VideoPlayer({ videoLink, videoTitle }) {
       className="aspect-video"
       src={videoLink}
       title={videoTitle}
-      frameborder="0"
+      frameBorder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen
+      allowFullScreen
     ></iframe>
   );
 }

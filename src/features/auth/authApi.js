@@ -1,11 +1,49 @@
 import { apiSlice } from "../api/apiSlice";
-import { userLoggedIn } from "./authSlice";
+import { loginError, userLoggedIn } from "./authSlice";
 
 export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    adminLogin: builder.mutation({
-      query: (data) => ({
+    login: builder.mutation({
+      query: ({ data, role }) => ({
         url: "/login",
+        method: "POST",
+        body: data,
+      }),
+
+      async onQueryStarted({ role }, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+          const { data } = result || {};
+          if (data?.accessToken && data?.user) {
+            if (data?.user?.role !== role) {
+              console.log(true);
+              dispatch(loginError("Enter valid email or password"));
+            } else {
+              localStorage.setItem(
+                "auth",
+                JSON.stringify({
+                  accessToken: data.accessToken,
+                  user: data.user,
+                })
+              );
+
+              dispatch(
+                userLoggedIn({
+                  accessToken: data.accessToken,
+                  user: data.user,
+                })
+              );
+              dispatch(loginError(""));
+            }
+          }
+        } catch (err) {
+          console.log(err?.Error);
+        }
+      },
+    }),
+    register: builder.mutation({
+      query: (data) => ({
+        url: "/register",
         method: "POST",
         body: data,
       }),
@@ -37,4 +75,4 @@ export const authApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useAdminLoginMutation } = authApi;
+export const { useLoginMutation, useRegisterMutation } = authApi;

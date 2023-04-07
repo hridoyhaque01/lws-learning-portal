@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   useAddAssignmentMutation,
   useEditAssignmentMutation,
@@ -6,7 +7,9 @@ import {
 import { useGetVideosQuery } from "../../features/videos/videosApi";
 import ModalInput from "../ui/ModalInput";
 
-export default function VideoModal({ open, control, assignment, type }) {
+export default function VideoModal({ open, control }) {
+  const { type, page, assignment } = useSelector((state) => state.assignment);
+
   const [formData, setFormData] = useState({
     title: "",
     video_title: "",
@@ -14,10 +17,13 @@ export default function VideoModal({ open, control, assignment, type }) {
     totalMark: null,
   });
 
-  const { data: videos, isLoading, isError } = useGetVideosQuery();
+  const { data, isLoading, isError } = useGetVideosQuery({ page });
 
-  const [addAssignment, { isSuccess: addSuccess }] = useAddAssignmentMutation();
-  const [editAssignment, { isSuccess: editSuccess }] =
+  const { response: videos } = data || {};
+
+  const [addAssignment, { isSuccess: addSuccess, isLoading: addLoading }] =
+    useAddAssignmentMutation();
+  const [editAssignment, { isSuccess: editSuccess, isLoading: editLoading }] =
     useEditAssignmentMutation();
 
   // decide what to render
@@ -47,6 +53,7 @@ export default function VideoModal({ open, control, assignment, type }) {
       editAssignment({
         id: assignment?.id,
         data: { ...formData, totalMark: Number(formData.totalMark) },
+        page,
       });
     }
 
@@ -88,6 +95,7 @@ export default function VideoModal({ open, control, assignment, type }) {
     if (editSuccess || addSuccess) {
       control();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editSuccess, addSuccess]);
 
   return (
@@ -167,6 +175,7 @@ export default function VideoModal({ open, control, assignment, type }) {
 
             <div>
               <button
+                disabled={addLoading || editLoading}
                 type="submit"
                 className="group  relative w-full flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500"
               >

@@ -44,16 +44,9 @@ function App() {
             </PublicRoute>
           }
         />
+
         <Route
-          path="/courses"
-          element={
-            <StudentPrivateRoute>
-              <CoursePlayer />
-            </StudentPrivateRoute>
-          }
-        />
-        <Route
-          path="/courses/:videoId"
+          path="/courses/:videoId?"
           element={
             <StudentPrivateRoute>
               <CoursePlayer />
@@ -69,7 +62,7 @@ function App() {
           }
         />
         <Route
-          path="/quiz/:id"
+          path="/quiz/:quizId"
           element={
             <StudentPrivateRoute>
               <Quiz />

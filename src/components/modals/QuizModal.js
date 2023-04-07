@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   useAddQuizMutation,
   useEditQuizMutation,
@@ -8,7 +9,9 @@ import Checkbox from "../ui/Checkbox";
 import ModalInput from "../ui/ModalInput";
 import OptionInput from "../ui/OptionInput";
 
-export default function QuizModal({ open, control, quiz, type }) {
+export default function QuizModal({ open, control }) {
+  const { type, page, quiz } = useSelector((state) => state.quiz);
+
   const [formData, setFormData] = useState({
     question: "",
     video_title: "",
@@ -37,10 +40,14 @@ export default function QuizModal({ open, control, quiz, type }) {
     ],
   });
 
-  const { data: videos, isLoading, isError } = useGetVideosQuery();
+  const { data, isLoading, isError } = useGetVideosQuery({ page });
 
-  const [addQuiz, { isSuccess: addSuccess }] = useAddQuizMutation();
-  const [editQuiz, { isSuccess: editSuccess }] = useEditQuizMutation();
+  const { response: videos } = data || {};
+
+  const [addQuiz, { isSuccess: addSuccess, isLoading: addLoading }] =
+    useAddQuizMutation();
+  const [editQuiz, { isSuccess: editSuccess, isLoading: editLoading }] =
+    useEditQuizMutation();
 
   // decide what to render
 
@@ -67,7 +74,7 @@ export default function QuizModal({ open, control, quiz, type }) {
     if (type === "add") {
       addQuiz(formData);
     } else if (type === "edit") {
-      editQuiz({ id: quiz?.id, data: formData });
+      editQuiz({ id: quiz?.id, data: formData, page });
     }
 
     resetForm();
@@ -166,6 +173,7 @@ export default function QuizModal({ open, control, quiz, type }) {
     if (editSuccess || addSuccess) {
       control();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editSuccess, addSuccess]);
 
   return (
@@ -312,6 +320,7 @@ export default function QuizModal({ open, control, quiz, type }) {
 
             <div>
               <button
+                disabled={addLoading || editLoading}
                 type="submit"
                 className="group  relative w-full flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500"
               >

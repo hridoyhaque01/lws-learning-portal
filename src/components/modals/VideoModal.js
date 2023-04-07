@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   useAddVideoMutation,
   useEditVideoMutation,
@@ -6,7 +7,8 @@ import {
 import ModalInput from "../ui/ModalInput";
 import TextArea from "../ui/TextArea";
 
-export default function VideoModal({ open, control, video, type }) {
+export default function VideoModal({ open, control }) {
+  const { type, page, video } = useSelector((state) => state.videos);
   const [formValue, setFormValue] = useState({
     title: "",
     description: "",
@@ -15,8 +17,10 @@ export default function VideoModal({ open, control, video, type }) {
     url: "",
   });
 
-  const [editVideo, { isSuccess: editSuccess }] = useEditVideoMutation();
-  const [addVideo, { isSuccess: addSuccess }] = useAddVideoMutation();
+  const [editVideo, { isSuccess: editSuccess, isLoading: addLoading }] =
+    useEditVideoMutation();
+  const [addVideo, { isSuccess: addSuccess, isLoading: editLoading }] =
+    useAddVideoMutation();
 
   const resetForm = () => {
     setFormValue({
@@ -47,6 +51,7 @@ export default function VideoModal({ open, control, video, type }) {
           views: formValue.views + "k",
           duration: parseDuration,
         },
+        page,
       });
     }
 
@@ -89,6 +94,7 @@ export default function VideoModal({ open, control, video, type }) {
     if (editSuccess || addSuccess) {
       control();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editSuccess, addSuccess]);
 
   return (
@@ -170,6 +176,7 @@ export default function VideoModal({ open, control, video, type }) {
 
             <div>
               <button
+                disabled={addLoading || editLoading}
                 type="submit"
                 className="group  relative w-full flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500"
               >

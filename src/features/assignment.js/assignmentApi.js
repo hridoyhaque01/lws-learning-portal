@@ -3,35 +3,65 @@ import { apiSlice } from "../api/apiSlice";
 export const assignmentApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAssignments: builder.query({
-      query: () => ({
-        url: "/assignments",
-        method: "GET",
+      query: (page = 1) => ({
+        url: `/assignments?_page=${page}&_limit=${process.env.REACT_APP_ASSIGNMENT_PER_PAGE}`,
       }),
+      providesTags: ["assignments"],
+      transformResponse: (response, meta) => {
+        const totalAssignments = Number(
+          meta.response.headers.get("X-Total-Count")
+        );
+        const totalPages = Math.ceil(
+          totalAssignments / process.env.REACT_APP_ASSIGNMENT_PER_PAGE
+        );
+        return {
+          response,
+          totalAssignments,
+          totalPages,
+        };
+      },
+    }),
+    getAssignment: builder.query({
+      query: (id) => ({
+        url: `/assignments?video_id_like=${id}`,
+      }),
+      transformResponse: (response) => {
+        if (response?.length > 0) {
+          return {
+            response,
+            assignmentAvailable: true,
+          };
+        } else {
+          return {
+            response,
+            assignmentAvailable: false,
+          };
+        }
+      },
     }),
     editAssignment: builder.mutation({
-      query: ({ id, data }) => ({
+      query: ({ id, data, page }) => ({
         url: `/assignments/${id}`,
         method: "PATCH",
         body: data,
       }),
 
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+      async onQueryStarted({ page }, { queryFulfilled, dispatch }) {
         try {
           const { data } = await queryFulfilled;
+
           if (data?.id) {
             dispatch(
-              apiSlice.util.updateQueryData(
-                "getAssignments",
-                undefined,
-                (draft) => {
-                  const index = draft.findIndex(
-                    (assignment) => assignment.id === data?.id
-                  );
-                  if (index !== -1) {
-                    draft[index] = data;
-                  }
+              apiSlice.util.updateQueryData("getAssignments", page, (draft) => {
+                console.log(JSON.parse(JSON.stringify(data)));
+
+                const index = draft.response.findIndex(
+                  (assignment) => assignment.id === data?.id
+                );
+                if (index !== -1) {
+                  draft.response[index] = data;
                 }
-              )
+              })
             );
           }
         } catch (err) {}
@@ -43,48 +73,21 @@ export const assignmentApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
-        try {
-          const { data } = await queryFulfilled;
-          if (data?.id) {
-            dispatch(
-              apiSlice.util.updateQueryData(
-                "getAssignments",
-                undefined,
-                (draft) => {
-                  draft.push(data);
-                }
-              )
-            );
-          }
-        } catch (err) {}
-      },
+      invalidatesTags: ["assignments"],
     }),
     deleteAssignment: builder.mutation({
-      query: (id) => ({
+      query: ({ id, page }) => ({
         url: `/assignments/${id}`,
         method: "DELETE",
       }),
-      async onQueryStarted(id, { queryFulfilled, dispatch }) {
-        try {
-          await queryFulfilled;
-          dispatch(
-            apiSlice.util.updateQueryData(
-              "getAssignments",
-              undefined,
-              (draft) => {
-                return draft?.filter((assignment) => assignment?.id !== id);
-              }
-            )
-          );
-        } catch (err) {}
-      },
+      invalidatesTags: ["assignments"],
     }),
   }),
 });
 
 export const {
   useGetAssignmentsQuery,
+  useGetAssignmentQuery,
   useAddAssignmentMutation,
   useEditAssignmentMutation,
   useDeleteAssignmentMutation,

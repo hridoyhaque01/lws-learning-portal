@@ -4,8 +4,8 @@ export default function AssignmentTableRow({
   title,
   videoTitle,
   mark,
-  modalHandler,
-  deleteHandler,
+  handleAssignment,
+  handlerDelete,
 }) {
   return (
     <tr>
@@ -19,7 +19,7 @@ export default function AssignmentTableRow({
           strokeWidth="1.5"
           stroke="currentColor"
           className="w-6 h-6 hover:text-red-500 cursor-pointer transition-all"
-          onClick={deleteHandler}
+          onClick={handlerDelete}
         >
           <path
             strokeLinecap="round"
@@ -33,7 +33,7 @@ export default function AssignmentTableRow({
           strokeWidth="1.5"
           stroke="currentColor"
           className="w-6 h-6 hover:text-blue-500 cursor-pointer transition-all"
-          onClick={modalHandler}
+          onClick={handleAssignment}
         >
           <path
             strokeLinecap="round"

@@ -3,12 +3,12 @@ import { Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 export default function PublicRoute({ children }) {
-  const checkRole = useAuth();
-  return checkRole === undefined ? (
+  const authRole = useAuth();
+  return authRole === undefined ? (
     children
-  ) : checkRole === "admin" ? (
+  ) : authRole === "admin" ? (
     <Navigate to="/admin/dashboard" />
   ) : (
-    <Navigate to="/course" />
+    <Navigate to="/courses" />
   );
 }

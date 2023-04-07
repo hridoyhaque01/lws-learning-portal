@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useAdminLoginMutation } from "../../features/auth/authApi";
+import { useLoginMutation } from "../../features/auth/authApi";
+import { selectError } from "../../features/auth/authSelectors";
+import useAuth from "../../hooks/useAuth";
 import SubmitButton from "../ui/SubmitButton";
 import TextInput from "../ui/TextInput";
 import TextLink from "../ui/TextLink";
+import Error from "../ui/errors/Error";
 
 export default function SigninForm({ user }) {
-  const [adminLogin, { data: adminData, error: responseError }] =
-    useAdminLoginMutation();
+  const [login, { error: responseError }] = useLoginMutation();
+  const checkRole = useAuth();
+  const loginError = useSelector(selectError);
+
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -17,18 +23,21 @@ export default function SigninForm({ user }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (user === "admin") {
-      adminLogin(data);
-    }
+    const role = user === "admin" ? "admin" : "student";
+    login({ data, role });
   };
 
   useEffect(() => {
+    console.log(responseError);
+
     if (responseError?.data) {
-      setError(responseError.data);
-    } else if (adminData?.accessToken && adminData?.user) {
+      setError(responseError?.data);
+    } else if (checkRole === "admin") {
       navigate("/admin/dashboard");
+    } else if (checkRole === "student") {
+      navigate("/courses");
     }
-  }, [adminData, responseError, navigate]);
+  }, [checkRole, responseError, navigate]);
 
   return (
     <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -70,7 +79,8 @@ export default function SigninForm({ user }) {
         <SubmitButton name="Sign in" />
       </div>
 
-      {error !== "" && <div>{error}</div>}
+      {error !== "" && <Error bg="error" message={error} />}
+      {loginError !== "" && <Error bg="error" message={loginError} />}
     </form>
   );
 }

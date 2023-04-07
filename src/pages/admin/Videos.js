@@ -5,17 +5,13 @@ import AdminVideos from "../../components/videos/AdminVideos";
 
 export default function Videos() {
   const [openedModal, setOpenedModal] = useState(false);
-  const [modalVideo, setModalVideo] = useState();
-  const [type, setType] = useState("");
 
-  const controlModal = () => {
+  const closeModal = () => {
     setOpenedModal(false);
   };
 
-  const controlInsideModal = (video, modalType) => {
+  const openModal = () => {
     setOpenedModal(true);
-    setModalVideo(video);
-    setType(modalType);
   };
 
   return (
@@ -24,14 +20,9 @@ export default function Videos() {
 
       <section className="py-6 bg-primary">
         <div className="mx-auto max-w-full px-5 lg:px-20">
-          <AdminVideos handler={controlInsideModal} />
+          <AdminVideos control={openModal} />
         </div>
-        <VideoModal
-          open={openedModal}
-          video={modalVideo}
-          control={controlModal}
-          type={type}
-        />
+        <VideoModal open={openedModal} control={closeModal} />
       </section>
     </div>
   );

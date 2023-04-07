@@ -1,12 +1,14 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import learningProtal from "../assets/image/learningportal.svg";
+import { selectName } from "../features/auth/authSelectors";
 import { userLoggedOut } from "../features/auth/authSlice";
 import useAuth from "../hooks/useAuth";
 
 export default function Navigation({ navigate }) {
   const role = useAuth();
+  const name = useSelector(selectName);
   const dispatch = useDispatch();
 
   const handleUser = () => {
@@ -22,12 +24,12 @@ export default function Navigation({ navigate }) {
         </Link>
         <div className="flex items-center gap-3">
           {role === "student" && !navigate && (
-            <Link to="/Leaderboard" className="font-bold">
+            <Link to="/leaderboard" className="font-bold">
               Leaderboard
             </Link>
           )}
 
-          <h2 className={role === "admin" && "font-bold"}>Admin</h2>
+          <h2 className={`${role === "admin" && "font-bold"}`}>{name}</h2>
           <button
             type="button"
             onClick={handleUser}

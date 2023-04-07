@@ -70,11 +70,6 @@
       "createdAt": "2023-02-24T17:59:00.000Z"
     },
     {
-      "email": "admin@learnwithsumit.com",
-      "password": "lws@123456",
-      "id": 3
-    },
-    {
       "title": "Facing the Future: The Truth About Artificial Intelligence and Our Jobs - Bangla",
       "description": "This video explores the impact of artificial intelligence on employment, examining the history of automation and the current state of AI technology. The video aims to provide a balanced perspective on the topic, helping viewers understand the truth about AI's impact on jobs and offering advice on how to prepare for the changing job market. This video also answers the most common questions asked by programmers worldwide - \"Will AI take my job?\"",
       "views": "9.50k",
@@ -91,6 +86,42 @@
       "url": "https://youtu.be/721mxZ3XHf8",
       "createdAt": "2023-04-01T18:53:12.886Z",
       "id": 5
+    },
+    {
+      "title": "Demo",
+      "description": "demo description",
+      "views": "12k",
+      "duration": "12:00",
+      "url": "https://youtu.be/BihZd2x8Qh8",
+      "createdAt": "2023-04-04T17:30:37.115Z",
+      "id": 6
+    },
+    {
+      "title": "Demo2",
+      "description": "122",
+      "views": "12k",
+      "duration": "12:00",
+      "url": "https://youtu.be/BihZd2x8Qh8",
+      "createdAt": "2023-04-04T17:32:53.450Z",
+      "id": 7
+    },
+    {
+      "title": "bounce Function in JavaScript - JavaScript Job Interview question",
+      "description": "1asads",
+      "views": "12k",
+      "duration": "12:00",
+      "url": "12",
+      "createdAt": "2023-04-04T17:33:02.258Z",
+      "id": 8
+    },
+    {
+      "title": "bounce Function in JavaScript - JavaScript Job Interview question",
+      "description": "Lorem Ipsum is a placeholder text that is commonly used in graphic, print and web design. It is derived from a scrambled Latin passage that dates back to the 15th century1. It is used to create mock-ups of layouts without distracting from the visual elements",
+      "views": "12k",
+      "duration": "12:00",
+      "url": "demo link",
+      "createdAt": "2023-04-04T17:33:23.570Z",
+      "id": 9
     }
   ],
   "assignments": [
@@ -107,20 +138,6 @@
       "video_id": 2,
       "video_title": "#2 JavaScript Tips and Tricks - JavaScript Job Interview Questions",
       "totalMark": 100
-    },
-    {
-      "title": "bounce Function in JavaScript - JavaScript Job Interview question",
-      "video_title": "Debounce Function in JavaScript - JavaScript Job Interview question",
-      "video_id": 1,
-      "totalMark": 100,
-      "id": 3
-    },
-    {
-      "title": " JavaScript Job Interview question",
-      "video_title": "What is Server Side Rendering - Say hi to Next.js - Bangla ( বাংলা ) Tutorial",
-      "video_id": 5,
-      "totalMark": 100,
-      "id": 4
     }
   ],
   "quizzes": [
@@ -246,15 +263,15 @@
       "title": "Assignment 1 - Implement Debounce Function",
       "createdAt": "2021-01-15T15:17:01.727Z",
       "totalMark": 100,
-      "mark": 20,
+      "mark": 0,
       "repo_link": "https://github.com/Learn-with-Sumit/assignment-1",
-      "status": "published"
+      "status": "pending"
     },
     {
       "id": 2,
       "student_id": 2,
       "student_name": "Saad Hasan",
-      "assignment_id": 1,
+      "assignment_id": 2,
       "title": "Assignment 2 - Implement Best Practices",
       "createdAt": "2021-01-15T15:17:01.727Z",
       "totalMark": 100,
@@ -266,13 +283,25 @@
       "id": 3,
       "student_id": 3,
       "student_name": "Akash Ahmed",
-      "assignment_id": 1,
+      "assignment_id": 2,
       "title": "Assignment 2 - Implement Best Practices",
       "createdAt": "2021-01-15T15:17:01.727Z",
       "totalMark": 100,
       "mark": 50,
       "repo_link": "https://github.com/Learn-with-Sumit/assignment-1",
       "status": "published"
+    },
+    {
+      "assignment_id": 1,
+      "student_id": 3,
+      "student_name": "Akash Ahmed",
+      "title": "Assignment 1 - Implement Debounce Function",
+      "totalMark": 100,
+      "createdAt": "2023-04-06T13:35:05.785Z",
+      "mark": 0,
+      "repo_link": "test repo",
+      "status": "pending",
+      "id": 4
     }
   ],
   "quizMark": [
@@ -287,6 +316,30 @@
       "totalWrong": 1,
       "totalMark": 10,
       "mark": 5
+    },
+    {
+      "student_id": 3,
+      "student_name": "Akash Ahmed",
+      "video_id": 1,
+      "video_title": "Debounce Function in JavaScript - JavaScript Job Interview question",
+      "totalQuiz": 2,
+      "totalCorrect": 2,
+      "totalWrong": 0,
+      "totalMark": 10,
+      "mark": 10,
+      "id": 2
+    },
+    {
+      "student_id": 5,
+      "student_name": "Ferdous",
+      "video_id": 2,
+      "video_title": "#2 JavaScript Tips and Tricks - JavaScript Job Interview Questions",
+      "totalQuiz": 1,
+      "totalCorrect": 1,
+      "totalWrong": 0,
+      "totalMark": 5,
+      "mark": 5,
+      "id": 3
     }
   ]
 }

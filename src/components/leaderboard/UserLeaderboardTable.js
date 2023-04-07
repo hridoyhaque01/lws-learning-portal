@@ -1,6 +1,8 @@
 import React from "react";
 
-export default function LeaderBoardHeader() {
+export default function UserLeaderboardTable({ unserInfo }) {
+  const { assignmentMark, name, rank, quizMark, totalMark } = unserInfo || {};
+
   return (
     <table className="text-base w-full border border-slate-600/50 rounded-md my-4">
       <thead>
@@ -15,11 +17,11 @@ export default function LeaderBoardHeader() {
 
       <tbody>
         <tr className="border-2 border-cyan">
-          <td className="table-td text-center font-bold">4</td>
-          <td className="table-td text-center font-bold">Saad Hasan</td>
-          <td className="table-td text-center font-bold">50</td>
-          <td className="table-td text-center font-bold">50</td>
-          <td className="table-td text-center font-bold">100</td>
+          <td className="table-td text-center font-bold">{rank}</td>
+          <td className="table-td text-center font-bold">{name}</td>
+          <td className="table-td text-center font-bold">{quizMark}</td>
+          <td className="table-td text-center font-bold">{assignmentMark}</td>
+          <td className="table-td text-center font-bold">{totalMark}</td>
         </tr>
       </tbody>
     </table>

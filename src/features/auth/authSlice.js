@@ -3,10 +3,11 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   accessToken: undefined,
   user: undefined,
+  error: "",
 };
 
-const authAdminSlice = createSlice({
-  name: "authAdminSlice",
+const authSlice = createSlice({
+  name: "authSlice",
   initialState,
   reducers: {
     userLoggedIn: (state, action) => {
@@ -17,8 +18,11 @@ const authAdminSlice = createSlice({
       state.accessToken = undefined;
       state.user = undefined;
     },
+    loginError: (state, action) => {
+      state.error = action.payload;
+    },
   },
 });
 
-export default authAdminSlice.reducer;
-export const { userLoggedIn, userLoggedOut } = authAdminSlice.actions;
+export default authSlice.reducer;
+export const { userLoggedIn, userLoggedOut, loginError } = authSlice.actions;

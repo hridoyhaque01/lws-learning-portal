@@ -1,11 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {};
+const initialState = {
+  type: "",
+  page: 1,
+  assignment: {},
+};
 
 const assignmentSlice = createSlice({
   name: "assignmentSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    setAssignment: (state, action) => {
+      state = { ...state, ...action.payload };
+      return state;
+    },
+  },
 });
 
 export default assignmentSlice.reducer;
+export const { setAssignment } = assignmentSlice.actions;

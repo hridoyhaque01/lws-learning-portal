@@ -1,57 +1,90 @@
 import { apiSlice } from "../api/apiSlice";
 
+const assignmentMarkLimit = process.env.REACT_APP_ASSIGNMENTMARK_PAGE;
+
 export const assignmentMarkApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAssignmentsMark: builder.query({
-      query: () => ({
-        url: "/assignmentMark",
-        method: "GET",
+      query: ({ page = 1, limit }) => ({
+        url: `/assignmentMark?_page=${page}&_limit=${limit}`,
       }),
-      transformResponse: (response) => {
-        let status = { total: 0, pending: 0, published: 0 };
-        if (response?.length > 0) {
+      providesTags: ["assignmentMark"],
+      transformResponse: (response, meta, arg) => {
+        const totalAssignments = Number(
+          meta.response.headers.get("X-Total-Count")
+        );
+        const totalPages = Math.ceil(totalAssignments / arg.limit);
+
+        const status = { total: totalAssignments, pending: 0, published: 0 };
+
+        if (totalAssignments > 0) {
           const pending = response.reduce(
             (totalPending, res) =>
-              res?.status === "pending" ? 1 + totalPending : totalPending,
+              res.status === "pending" ? totalPending + 1 : totalPending,
             0
           );
-
           const published = response.reduce(
             (totalPublished, res) =>
-              res?.status === "published" ? 1 + totalPublished : totalPublished,
+              res.status === "published" ? totalPublished + 1 : totalPublished,
             0
           );
 
           return {
             status: {
-              total: response?.length,
+              ...status,
               pending,
               published,
             },
             response,
+            totalAssignments,
+            totalPages,
+          };
+        } else {
+          return {
+            response,
+            totalAssignments,
+            totalPages,
+            status,
           };
         }
-        return { status, response };
       },
     }),
-    addAssignmentMark: builder.mutation({
-      query: ({ id, data }) => ({
+    getAssignmentUser: builder.query({
+      query: (id) => ({
+        url: `/assignmentMark?student_id_like=${id}`,
+      }),
+      transformResponse: (response) => {
+        if (response?.length !== 0) {
+          return {
+            response,
+            assignmentQiven: true,
+          };
+        } else {
+          return {
+            response,
+            assignmentQiven: false,
+          };
+        }
+      },
+    }),
+    editAssignmentMark: builder.mutation({
+      query: ({ id, data, page }) => ({
         url: `/assignmentMark/${id}`,
         method: "PATCH",
         body: data,
       }),
 
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+      async onQueryStarted({ page, id }, { queryFulfilled, dispatch }) {
         try {
           const { data } = await queryFulfilled;
           if (data?.id) {
             dispatch(
               apiSlice.util.updateQueryData(
                 "getAssignmentsMark",
-                undefined,
+                { page, limit: assignmentMarkLimit },
                 (draft) => {
                   const index = draft.response.findIndex(
-                    (assignment) => assignment.id === arg.id
+                    (assignment) => assignment.id === id
                   );
 
                   if (index !== -1) {
@@ -66,8 +99,36 @@ export const assignmentMarkApi = apiSlice.injectEndpoints({
         } catch (err) {}
       },
     }),
+    submitAssignment: builder.mutation({
+      query: (data) => ({
+        url: "/assignmentMark",
+        method: "POST",
+        body: data,
+      }),
+
+      async onQueryStarted({ page, id }, { queryFulfilled, dispatch }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data?.id) {
+            dispatch(
+              apiSlice.util.updateQueryData(
+                "getAssignmentsMark",
+                { page, limit: assignmentMarkLimit },
+                (draft) => {
+                  draft.push(data);
+                }
+              )
+            );
+          }
+        } catch (err) {}
+      },
+    }),
   }),
 });
 
-export const { useGetAssignmentsMarkQuery, useAddAssignmentMarkMutation } =
-  assignmentMarkApi;
+export const {
+  useGetAssignmentsMarkQuery,
+  useEditAssignmentMarkMutation,
+  useGetAssignmentUserQuery,
+  useSubmitAssignmentMutation,
+} = assignmentMarkApi;
