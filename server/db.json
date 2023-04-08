@@ -48,6 +48,13 @@
       "role": "student",
       "name": "Arif",
       "id": 7
+    },
+    {
+      "email": "hridoyhaque@gmail.com",
+      "password": "$2a$10$yiu3b5vs0X/SyVuCLpi3TeUyFFVlqAlfEMarVSRjvXThm0xJSXn7S",
+      "name": "Hridoy",
+      "role": "student",
+      "id": 8
     }
   ],
   "videos": [
@@ -77,6 +84,15 @@
       "url": "https://www.youtube.com/embed/BihZd2x8Qh8",
       "createdAt": "2023-04-08T13:07:41.852Z",
       "id": 6
+    },
+    {
+      "title": "How to install React in 2023 - new react.dev Website",
+      "description": "Are you interested in learning React JS from scratch but not sure how to get started? In this video tutorial, I'll walk you through the process of installing React JS according to the brand new react.dev website. Whether you're a complete beginner or already have some coding experience, this step-by-step guide will help you set up your environment and start building React applications in no time.\n\nBy the end of this tutorial, you'll have a solid understanding of how to install and set up React JS, and be ready to start building your own React applications. Whether you want to create a simple website or a complex web app, React JS is a powerful tool that can help you achieve your goals. So, let's get started and learn how to install React JS today!",
+      "views": "1.2k",
+      "duration": "15:59",
+      "url": "https://www.youtube.com/embed/DOC3MyuuWhM",
+      "createdAt": "2023-04-08T15:08:44.861Z",
+      "id": 7
     }
   ],
   "assignments": [
@@ -93,6 +109,13 @@
       "video_id": 2,
       "video_title": "#2 JavaScript Tips and Tricks - JavaScript Job Interview Questions",
       "totalMark": 100
+    },
+    {
+      "title": "Test Question",
+      "video_title": "Facing the Future: The Truth About Artificial Intelligence and Our Jobs - Bangla",
+      "video_id": 6,
+      "totalMark": 100,
+      "id": 3
     }
   ],
   "quizzes": [
@@ -179,6 +202,34 @@
           "isCorrect": false
         }
       ]
+    },
+    {
+      "question": "Test Question 1",
+      "video_title": "Facing the Future: The Truth About Artificial Intelligence and Our Jobs - Bangla",
+      "video_id": 6,
+      "options": [
+        {
+          "id": 1,
+          "option": "option 1",
+          "isCorrect": false
+        },
+        {
+          "id": 2,
+          "option": "option 2",
+          "isCorrect": true
+        },
+        {
+          "id": 3,
+          "option": "option 3",
+          "isCorrect": true
+        },
+        {
+          "id": 4,
+          "option": "option 4",
+          "isCorrect": false
+        }
+      ],
+      "id": 4
     }
   ],
   "assignmentMark": [
@@ -217,6 +268,42 @@
       "mark": 50,
       "repo_link": "https://github.com/Learn-with-Sumit/assignment-1",
       "status": "published"
+    },
+    {
+      "assignment_id": 3,
+      "student_id": 8,
+      "student_name": "Hridoy",
+      "title": "Test Question",
+      "totalMark": 100,
+      "createdAt": "2023-04-08T15:16:50.262Z",
+      "mark": 100,
+      "repo_link": "https://github.io/hridoyhaque01",
+      "status": "published",
+      "id": 4
+    },
+    {
+      "assignment_id": 1,
+      "student_id": 8,
+      "student_name": "Hridoy",
+      "title": "Assignment 1 - Implement Debounce Function",
+      "totalMark": 100,
+      "createdAt": "2023-04-08T15:18:24.037Z",
+      "mark": 100,
+      "repo_link": "https://github.io/hridoyhaque01",
+      "status": "published",
+      "id": 5
+    },
+    {
+      "assignment_id": 2,
+      "student_id": 8,
+      "student_name": "Hridoy",
+      "title": "Assignment 2 - Implement Best Practices",
+      "totalMark": 100,
+      "createdAt": "2023-04-08T15:18:32.541Z",
+      "mark": 100,
+      "repo_link": "https://github.io/hridoyhaque01",
+      "status": "published",
+      "id": 6
     }
   ],
   "quizMark": [
@@ -255,6 +342,42 @@
       "totalMark": 5,
       "mark": 5,
       "id": 3
+    },
+    {
+      "student_id": 8,
+      "student_name": "Hridoy",
+      "video_id": 1,
+      "video_title": "Debounce Function in JavaScript - JavaScript Job Interview question",
+      "totalQuiz": 2,
+      "totalCorrect": 2,
+      "totalWrong": 0,
+      "totalMark": 10,
+      "mark": 10,
+      "id": 4
+    },
+    {
+      "student_id": 8,
+      "student_name": "Hridoy",
+      "video_id": 2,
+      "video_title": "#2 JavaScript Tips and Tricks - JavaScript Job Interview Questions",
+      "totalQuiz": 1,
+      "totalCorrect": 1,
+      "totalWrong": 0,
+      "totalMark": 5,
+      "mark": 5,
+      "id": 5
+    },
+    {
+      "student_id": 8,
+      "student_name": "Hridoy",
+      "video_id": 6,
+      "video_title": "Facing the Future: The Truth About Artificial Intelligence and Our Jobs - Bangla",
+      "totalQuiz": 1,
+      "totalCorrect": 1,
+      "totalWrong": 0,
+      "totalMark": 5,
+      "mark": 5,
+      "id": 6
     }
   ]
 }

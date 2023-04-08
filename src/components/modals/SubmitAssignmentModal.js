@@ -30,6 +30,7 @@ export default function SubmitAssignmentModal() {
     };
 
     submitAssignment(submittedObj);
+    setInput("");
   };
 
   const handleModal = () => {

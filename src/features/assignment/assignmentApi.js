@@ -119,38 +119,6 @@ export const assignmentApi = apiSlice.injectEndpoints({
         url: `/assignments/${id}`,
         method: "DELETE",
       }),
-      async onQueryStarted(id, { queryFulfilled, dispatch }) {
-        try {
-          await queryFulfilled;
-          const data = dispatch(
-            assignmentMarkApi.endpoints.getAssignmentsMark.initiate({})
-          );
-
-          // get assignment mark response
-
-          const { response: assignmentMarks } = await dispatch(
-            assignmentMarkApi.endpoints.getAssignmentsMark.initiate({})
-          ).unwrap();
-
-          // delete assignment related mark
-
-          if (assignmentMarks?.length > 0) {
-            const filteredAssignments = assignmentMarks.filter(
-              (assignmentMark) => assignmentMark?.assignment_id === id
-            );
-            if (filteredAssignments?.length > 0) {
-              filteredAssignments.forEach((assignment) => {
-                const assignmentId = assignment.id;
-                dispatch(
-                  assignmentMarkApi.endpoints.deleteAssignmentMark.initiate(
-                    assignmentId
-                  )
-                );
-              });
-            }
-          }
-        } catch (err) {}
-      },
       invalidatesTags: (result, error, arg) => [
         "assignments",
         { type: "getAssignmentVideos", id: undefined },

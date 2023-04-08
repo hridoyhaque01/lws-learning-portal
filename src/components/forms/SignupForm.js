@@ -99,15 +99,15 @@ export default function SignupForm() {
         </div>
       </div>
 
-      <div className="flex items-center justify-end">
-        <TextLink link="/" name="log in" />
+      <div className="flex items-center justify-end gap-2">
+        <span>Already have account? </span> <TextLink link="/" name=" Signin" />
       </div>
 
       <div>
         <SubmitButton disabled={isLoading} name="Create Account" />
       </div>
       {/* {error?.trim().length > 0 && <Error bg="error" message={error} />} */}
-      {isError && <Error bg="error" message={responseError} />}
+      {isError && <Error bg="error" message={error} />}
     </form>
   );
 }

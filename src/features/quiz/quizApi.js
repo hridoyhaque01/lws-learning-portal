@@ -54,29 +54,6 @@ export const quizApi = apiSlice.injectEndpoints({
               )
             );
           }
-
-          // const quizMarks = await dispatch(
-          //   quizMarkApi.endpoints.getAllQuizMark.initiate()
-          // ).unwrap();
-
-          // if (quizMarks?.length > 0) {
-          //   const filteredQuizMarks = quizMarks.filter(
-          //     (quizMark) => quizMark?.video_id === quiz?.video_id
-          //   );
-          //   if (filteredQuizMarks?.length > 0) {
-          //     filteredQuizMarks.forEach((filteredQuizMark) => {
-          //       const quizMarkId = filteredQuizMark?.id;
-          //       const video_id = data?.video_id;
-          //       const video_title = data?.video_title;
-          //       dispatch(
-          //         quizMarkApi.endpoints.editQuizMark.initiate({
-          //           id: quizMarkId,
-          //           data: { video_id, video_title },
-          //         })
-          //       );
-          //     });
-          //   }
-          // }
         } catch (err) {}
       },
     }),

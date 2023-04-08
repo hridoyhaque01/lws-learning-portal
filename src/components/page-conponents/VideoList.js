@@ -11,8 +11,13 @@ export default function VideoList() {
   const [hasMore, setHasMore] = useState(true);
   const dispatch = useDispatch();
 
-  const { data, isLoading, isError, error } = useGetVideosQuery(page);
-  const { response: videos, totalPages, totalVideos } = data || {};
+  const limit = Number(process.env.REACT_APP_VIDEOS_PER_PAGE);
+
+  const { data, isLoading, isError, error } = useGetVideosQuery({
+    page,
+    limit,
+  });
+  const { response: videos, totalVideos } = data || {};
 
   const fetchMore = () => {
     setPage((prev) => prev + 1);
@@ -20,16 +25,18 @@ export default function VideoList() {
 
   useEffect(() => {
     if (page > 1) {
-      dispatch(videosApi.endpoints.getMoreVideos.initiate(page));
+      dispatch(videosApi.endpoints.getMoreVideos.initiate({ page }));
     }
-  });
+  }, [dispatch, page]);
 
   useEffect(() => {
     if (totalVideos > 0) {
-      const more = totalPages > page;
+      const more =
+        Math.ceil(totalVideos / Number(process.env.REACT_APP_VIDEOS_PER_PAGE)) >
+        page;
       setHasMore(more);
     }
-  }, [totalVideos, page, totalPages]);
+  }, [totalVideos, page]);
 
   // decide what to render
   let content = null;

@@ -157,7 +157,7 @@ export default function QuizModal() {
   };
 
   const handleModal = () => {
-    dispatch(setQuiz({ assignmentModal: false }));
+    dispatch(setQuiz({ quizModal: false }));
   };
 
   // reset form data

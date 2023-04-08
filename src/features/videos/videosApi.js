@@ -25,22 +25,26 @@ export const videosApi = apiSlice.injectEndpoints({
       },
     }),
     getMoreVideos: builder.query({
-      query: (page) => ({
+      query: ({ page }) => ({
         url: `/videos?_page=${page}&_sort=createdAt&_limit=${process.env.REACT_APP_VIDEOS_PER_PAGE}`,
       }),
       providesTags: ["videos"],
-      async onQueryStarted(page, { queryFulfilled, dispatch }) {
+      async onQueryStarted({ page }, { queryFulfilled, dispatch }) {
         try {
           const data = await queryFulfilled;
           if (data?.data.length > 0) {
             dispatch(
-              apiSlice.util.updateQueryData("getVideos", undefined, (draft) => {
-                return {
-                  response: [...draft.response, ...data.data],
-                  totalVideos: Number(draft.totalVideos),
-                  totalPages: Number(draft.totalPages),
-                };
-              })
+              apiSlice.util.updateQueryData(
+                "getVideos",
+                { page: undefined, limit: undefined },
+                (draft) => {
+                  return {
+                    response: [...draft.response, ...data.data],
+                    totalVideos: Number(draft.totalVideos),
+                    totalPages: Number(draft.totalPages),
+                  };
+                }
+              )
             );
           }
         } catch (err) {}
@@ -256,10 +260,6 @@ export const videosApi = apiSlice.injectEndpoints({
             quizApi.endpoints.getQuizzes.initiate({})
           ).unwrap();
 
-          const quizMarks = await dispatch(
-            quizMarkApi.endpoints.getAllQuizMark.initiate()
-          ).unwrap();
-
           // delete video related assignments
 
           if (assignments?.length > 0) {
@@ -285,20 +285,6 @@ export const videosApi = apiSlice.injectEndpoints({
               videoRelatedQuizzes.forEach((videoQuiz) => {
                 const id = videoQuiz?.id;
                 dispatch(quizApi.endpoints.deleteQuiz.initiate(id));
-              });
-            }
-          }
-
-          // delete video related quiz marks
-
-          if (quizMarks?.length > 0) {
-            const videoRelatedQuizMarks = quizMarks.filter(
-              (quiz) => quiz?.video_id === id
-            );
-            if (videoRelatedQuizMarks?.length > 0) {
-              videoRelatedQuizMarks.forEach((videoQuiz) => {
-                const id = videoQuiz?.id;
-                dispatch(quizMarkApi.endpoints.deleteQuizMark.initiate(id));
               });
             }
           }

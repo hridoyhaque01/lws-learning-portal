@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { controlSubmitAssignmentModal } from "../../features/assignment/assignmentSlice";
-import getLocalDate from "../../utils/getLocalDate";
+import getNormalDate from "../../utils/getNormalDate";
 
 export default function VideoDescription({ video, allData }) {
   const { id, title, createdAt, description } = video || {};
@@ -20,7 +20,7 @@ export default function VideoDescription({ video, allData }) {
         {title}
       </h1>
       <h2 className=" pb-4 text-sm leading-[1.7142857] text-slate-400">
-        Uploaded on {getLocalDate(createdAt)}
+        Uploaded on {getNormalDate(createdAt)}
       </h2>
 
       <div className="flex gap-4">
