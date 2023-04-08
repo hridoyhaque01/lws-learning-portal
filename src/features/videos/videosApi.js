@@ -1,4 +1,7 @@
 import { apiSlice } from "../api/apiSlice";
+import { assignmentApi } from "../assignment/assignmentApi";
+import { quizApi } from "../quiz/quizApi";
+import { quizMarkApi } from "../quizMark/quizMarkApi";
 
 const videoLimit = Number(process.env.REACT_APP_VIDEOS_PER_PAGE);
 
@@ -85,10 +88,13 @@ export const videosApi = apiSlice.injectEndpoints({
 
         return { data };
       },
+      providesTags: (result, error, { id, userId }) => {
+        return [{ type: "getVideo", id: `${userId}-${id}` }];
+      },
     }),
     getAssignmentVideos: builder.query({
       queryFn: async (
-        args,
+        id,
         { signal, dispatch, getState },
         extraOptions,
         baseQuery
@@ -96,17 +102,25 @@ export const videosApi = apiSlice.injectEndpoints({
         const { data: videos } = await baseQuery(`/videos`);
         const { data: assignments } = await baseQuery(`/assignments`);
 
-        const filterVideos = videos.filter((video) =>
-          assignments.every((assignment) => video.id !== assignment?.video_id)
-        );
+        if (id !== undefined) {
+          const findAssignmentVideo = videos.find((video) => video?.id === id);
 
-        const data = {
-          videos: filterVideos,
-        };
+          const filterVideos = videos.filter((video) =>
+            assignments.every((assignment) => video.id !== assignment?.video_id)
+          );
+          const combineVideos = [{ ...findAssignmentVideo }, ...filterVideos];
 
-        return { data };
+          return { data: combineVideos };
+        } else {
+          const filterVideos = videos.filter((video) =>
+            assignments.every((assignment) => video.id !== assignment?.video_id)
+          );
+          return { data: filterVideos };
+        }
       },
-      providesTags: ["getAssignmentVideos"],
+      providesTags: (result, error, id) => [
+        { type: "getAssignmentVideos", id },
+      ],
     }),
     editVideo: builder.mutation({
       query: ({ id, data, page }) => ({
@@ -115,7 +129,7 @@ export const videosApi = apiSlice.injectEndpoints({
         body: data,
       }),
 
-      async onQueryStarted({ page }, { queryFulfilled, dispatch }) {
+      async onQueryStarted({ page, id }, { queryFulfilled, dispatch }) {
         try {
           const { data } = await queryFulfilled;
           if (data?.id) {
@@ -134,6 +148,81 @@ export const videosApi = apiSlice.injectEndpoints({
               )
             );
           }
+
+          //get all response
+
+          const { response: assignments } = await dispatch(
+            assignmentApi.endpoints.getAssignments.initiate({})
+          ).unwrap();
+
+          const { response: quizzes } = await dispatch(
+            quizApi.endpoints.getQuizzes.initiate({})
+          ).unwrap();
+
+          const quizMarks = await dispatch(
+            quizMarkApi.endpoints.getAllQuizMark.initiate()
+          ).unwrap();
+
+          //update assignment details
+
+          if (assignments?.length > 0) {
+            const findAssignment = assignments.find(
+              (assignment) => assignment?.video_id === id
+            );
+
+            if (findAssignment) {
+              const assignmentId = Number(findAssignment.id);
+              const video_title = data?.title;
+              dispatch(
+                assignmentApi.endpoints.editAssignment.initiate({
+                  id: assignmentId,
+                  data: { video_title },
+                  page,
+                })
+              );
+            }
+          }
+
+          // update  quiz video details
+
+          if (quizzes?.length > 0) {
+            const videoRelatedQuizzes = quizzes.filter(
+              (quiz) => quiz?.video_id === id
+            );
+            if (videoRelatedQuizzes?.length > 0) {
+              videoRelatedQuizzes.forEach((videoQuiz) => {
+                const id = videoQuiz?.id;
+                const video_title = data?.title;
+                dispatch(
+                  quizApi.endpoints.editQuiz.initiate({
+                    id,
+                    data: { video_title },
+                    page: undefined,
+                  })
+                );
+              });
+            }
+          }
+
+          // update quiz mark video details
+
+          if (quizMarks?.length > 0) {
+            const videoRelatedQuizMarks = quizMarks.filter(
+              (quiz) => quiz?.video_id === id
+            );
+            if (videoRelatedQuizMarks?.length > 0) {
+              videoRelatedQuizMarks.forEach((videoQuiz) => {
+                const id = videoQuiz?.id;
+                const video_title = data?.title;
+                dispatch(
+                  quizMarkApi.endpoints.editQuizMark.initiate({
+                    id,
+                    data: { video_title },
+                  })
+                );
+              });
+            }
+          }
         } catch (err) {}
       },
     }),
@@ -143,14 +232,82 @@ export const videosApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["videos", "getAssignmentVideos"],
+      invalidatesTags: (result, error, arg) => [
+        "videos",
+        { type: "getAssignmentVideos", id: undefined },
+      ],
     }),
     deleteVideo: builder.mutation({
       query: (id) => ({
         url: `/videos/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["videos"],
+      async onQueryStarted(id, { queryFulfilled, dispatch }) {
+        try {
+          await queryFulfilled;
+
+          // get all required api response
+
+          const { response: assignments } = await dispatch(
+            assignmentApi.endpoints.getAssignments.initiate({})
+          ).unwrap();
+
+          const { response: quizzes } = await dispatch(
+            quizApi.endpoints.getQuizzes.initiate({})
+          ).unwrap();
+
+          const quizMarks = await dispatch(
+            quizMarkApi.endpoints.getAllQuizMark.initiate()
+          ).unwrap();
+
+          // delete video related assignments
+
+          if (assignments?.length > 0) {
+            const findAssignment = assignments.find(
+              (assignment) => assignment?.video_id === id
+            );
+
+            if (findAssignment?.id) {
+              const assignmentId = Number(findAssignment.id);
+              dispatch(
+                assignmentApi.endpoints.deleteAssignment.initiate(assignmentId)
+              );
+            }
+          }
+
+          // delete video related quizzes
+
+          if (quizzes?.length > 0) {
+            const videoRelatedQuizzes = quizzes.filter(
+              (quiz) => quiz?.video_id === id
+            );
+            if (videoRelatedQuizzes?.length > 0) {
+              videoRelatedQuizzes.forEach((videoQuiz) => {
+                const id = videoQuiz?.id;
+                dispatch(quizApi.endpoints.deleteQuiz.initiate(id));
+              });
+            }
+          }
+
+          // delete video related quiz marks
+
+          if (quizMarks?.length > 0) {
+            const videoRelatedQuizMarks = quizMarks.filter(
+              (quiz) => quiz?.video_id === id
+            );
+            if (videoRelatedQuizMarks?.length > 0) {
+              videoRelatedQuizMarks.forEach((videoQuiz) => {
+                const id = videoQuiz?.id;
+                dispatch(quizMarkApi.endpoints.deleteQuizMark.initiate(id));
+              });
+            }
+          }
+        } catch (err) {}
+      },
+      invalidatesTags: (result, error, arg) => [
+        "videos",
+        { type: "getAssignmentVideos", id: undefined },
+      ],
     }),
   }),
 });

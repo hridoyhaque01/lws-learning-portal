@@ -14,6 +14,8 @@ export default function SigninForm({ user }) {
   const checkRole = useAuth();
   const loginError = useSelector(selectError);
 
+  // manage local states
+
   const [data, setData] = useState({
     email: "",
     password: "",

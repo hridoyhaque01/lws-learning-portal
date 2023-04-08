@@ -72,7 +72,7 @@ export default function Dashboard() {
 
               {/* admin marks  */}
 
-              <Link to="/admin/marks" className="dashboard-item-card">
+              <Link to="/admin/assignmentMarks" className="dashboard-item-card">
                 <svg
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"

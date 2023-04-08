@@ -5,15 +5,13 @@ import {
   useGetAssignmentsQuery,
 } from "../../../features/assignment/assignmentApi";
 import { setAssignment } from "../../../features/assignment/assignmentSlice";
-import {
-  assignmentMarkApi,
-  useGetAssignmentsMarkQuery,
-} from "../../../features/assignmentmark/assignmentMarkApi";
 import Error from "../../ui/errors/Error";
 import AssignmentTableLoader from "../../ui/loaders/AssignmentTableLoader";
 import AssignmentRow from "../rows/AssignmentRow";
 
-export default function AssignmentTable({ control }) {
+export default function AssignmentTable() {
+  //manage local state
+
   const [page, setPage] = useState(1);
 
   // rtk queries
@@ -23,42 +21,22 @@ export default function AssignmentTable({ control }) {
     limit,
   });
 
-  const { data: assignmentMarksData } = useGetAssignmentsMarkQuery({});
-
-  const { response: assignmentMarks } = assignmentMarksData || {};
-
-  // console.log(data);
-  // console.log(assignmentMarksData);
-
   const { totalPages, response: assignments } = data || {};
   const dispatch = useDispatch();
 
-  const [deleteAssignment, { isLoading: responseLoading }] =
-    useDeleteAssignmentMutation();
+  const [
+    deleteAssignment,
+    {
+      isLoading: deletResponseLoading,
+      isError: isDeleteResponseError,
+      error: deleteResponseError,
+    },
+  ] = useDeleteAssignmentMutation();
 
   // handlers
 
-  const deleteHandler = async (id) => {
-    try {
-      await deleteAssignment(id);
-      if (assignmentMarks?.length > 0) {
-        const filteredAssignments = assignmentMarks.filter(
-          (assignmentMark) => assignmentMark?.assignment_id === id
-        );
-        if (filteredAssignments?.length > 0) {
-          console.log(filteredAssignments);
-          filteredAssignments.forEach((assignment) => {
-            const assignmentId = assignment.id;
-            console.log(assignmentId);
-            dispatch(
-              assignmentMarkApi.endpoints.deleteAssignmentMark.initiate(
-                assignmentId
-              )
-            );
-          });
-        }
-      }
-    } catch (err) {}
+  const deleteHandler = (id) => {
+    deleteAssignment(id);
   };
 
   const handlePrev = () => {
@@ -73,16 +51,17 @@ export default function AssignmentTable({ control }) {
     }
   };
 
-  const handleChange = (assignment, type) => {
-    dispatch(setAssignment({ assignment, type }));
-    control();
+  const handleChange = (assignment, type, open) => {
+    dispatch(
+      setAssignment({ assignment, assignmentType: type, assignmentModal: open })
+    );
   };
 
   // side effects
 
   useEffect(() => {
     if (page >= 1) {
-      dispatch(setAssignment({ page }));
+      dispatch(setAssignment({ assginmentPage: page }));
     }
   }, [page, dispatch]);
 
@@ -91,8 +70,6 @@ export default function AssignmentTable({ control }) {
       setPage((prev) => prev - 1);
     }
   }, [totalPages, page]);
-
-  // decide what to render
 
   // decide what to render
 
@@ -130,9 +107,9 @@ export default function AssignmentTable({ control }) {
                 title={filterTitle}
                 videoTitle={filterVideoTitle}
                 mark={totalMark}
-                handleAssignment={() => handleChange(assignment, "edit")}
+                handleAssignment={() => handleChange(assignment, "edit", true)}
                 handlerDelete={() => deleteHandler(id)}
-                deleteLoad={responseLoading}
+                deleteLoad={deletResponseLoading}
               />
             );
           })}
@@ -144,12 +121,15 @@ export default function AssignmentTable({ control }) {
   return (
     <div className="px-3 py-20 bg-opacity-10">
       <div className="w-full flex">
-        <button className="btn ml-auto" onClick={() => handleChange({}, "add")}>
+        <button
+          className="btn ml-auto"
+          onClick={() => handleChange({}, "add", true)}
+        >
           Add Assignment
         </button>
       </div>
       <div className="overflow-x-auto mt-4">{content}</div>
-      {!isLoading && !isError && totalPages !== 1 && (
+      {!isLoading && !isError && totalPages > 1 && (
         <div className="flex justify-center items-center mt-10 gap-2">
           <button
             onClick={handlePrev}
@@ -169,6 +149,9 @@ export default function AssignmentTable({ control }) {
             next
           </button>
         </div>
+      )}
+      {!deletResponseLoading && isDeleteResponseError && (
+        <Error bg="error" message={deleteResponseError?.data} />
       )}
     </div>
   );

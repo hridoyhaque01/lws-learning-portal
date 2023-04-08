@@ -32,31 +32,48 @@ export const quizMarkApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+      invalidatesTags: (result, error, arg) => {
+        return [
+          "quizMark",
+          "getStudentResult",
+          { type: "getVideo", id: undefined },
+        ];
+      },
+    }),
+    editQuizMark: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/quizMark/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+
+      async onQueryStarted(args, { queryFulfilled, dispatch }) {
         try {
-          const data = await queryFulfilled;
-          if (data?.data?.id) {
-            console.log(JSON.parse(JSON.stringify(data)));
-
-            const { student_id, video_id } = data.data || {};
-
-            console.log(student_id, video_id);
-
+          const { data } = await queryFulfilled;
+          if (data?.id) {
             dispatch(
               apiSlice.util.updateQueryData(
-                "getQuizMark",
-                {
-                  id: video_id,
-                  userId: student_id,
-                },
+                "getAllQuizMark",
+                undefined,
                 (draft) => {
-                  console.log(JSON.parse(JSON.stringify(draft)));
+                  const index = draft.response.findIndex(
+                    (video) => video.id === data?.id
+                  );
+                  if (index !== -1) {
+                    draft.response[index] = data;
+                  }
                 }
               )
             );
           }
         } catch (err) {}
       },
+    }),
+    deleteQuizMark: builder.mutation({
+      query: (id) => ({
+        url: `/quizMark/${id}`,
+        method: "DELETE",
+      }),
     }),
   }),
 });
@@ -65,4 +82,6 @@ export const {
   useGetAllQuizMarkQuery,
   useGetQuizMarkQuery,
   useAddQuizMarkMutation,
+  useDeleteQuizMarkMutation,
+  useEditQuizMarkMutation,
 } = quizMarkApi;

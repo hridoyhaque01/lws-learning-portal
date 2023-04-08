@@ -1,17 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useAddAssignmentMutation,
   useEditAssignmentMutation,
 } from "../../features/assignment/assignmentApi";
+import {
+  selectAssignment,
+  selectAssignmentModal,
+  selectAssignmentType,
+  selectAssingmentPage,
+} from "../../features/assignment/assignmentSelectors";
+import { setAssignment } from "../../features/assignment/assignmentSlice";
 import { useGetAssignmentVideosQuery } from "../../features/videos/videosApi";
 import Error from "../ui/errors/Error";
 import ModalInput from "../ui/inputes/ModalInput";
 
-export default function AssignmentModal({ open, control }) {
-  const { type, page, assignment } = useSelector((state) => state.assignment);
+export default function AssignmentModal() {
+  const type = useSelector(selectAssignmentType);
+  const assignment = useSelector(selectAssignment);
+  const page = useSelector(selectAssingmentPage);
+  const modal = useSelector(selectAssignmentModal);
 
-  const [videoLength, setVideoLength] = useState(0);
+  const { video_id } = assignment || {};
+
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -20,15 +32,31 @@ export default function AssignmentModal({ open, control }) {
     totalMark: null,
   });
 
-  const { data, isLoading, isError, error } = useGetAssignmentVideosQuery();
+  const {
+    data: videos,
+    isLoading,
+    isError,
+    error,
+  } = useGetAssignmentVideosQuery(video_id);
+  const [
+    addAssignment,
+    {
+      isSuccess: addSuccess,
+      isLoading: addLoading,
+      isError: isAddError,
+      error: addError,
+    },
+  ] = useAddAssignmentMutation();
 
-  const { videos } = data || {};
-
-  const [addAssignment, { isSuccess: addSuccess, isLoading: addLoading }] =
-    useAddAssignmentMutation();
-
-  const [editAssignment, { isSuccess: editSuccess, isLoading: editLoading }] =
-    useEditAssignmentMutation();
+  const [
+    editAssignment,
+    {
+      isSuccess: editSuccess,
+      isLoading: editLoading,
+      isError: isEditError,
+      error: editError,
+    },
+  ] = useEditAssignmentMutation();
 
   // decide what to render
 
@@ -80,20 +108,23 @@ export default function AssignmentModal({ open, control }) {
         page,
       });
     }
-
     resetForm();
   };
 
   // handle the input field
 
   const handleChange = (e) => {
-    // const { name, value } = e.target;
-    // if (name === "video_title") {
-    //   const video = videos.find((v) => v.title === value);
-    //   setFormData({ ...formData, [name]: value, video_id: video?.id });
-    // } else {
-    //   setFormData({ ...formData, [name]: value });
-    // }
+    const { name, value } = e.target;
+    if (name === "video_title") {
+      const video = videos.find((v) => v.title === value);
+      setFormData({ ...formData, [name]: value, video_id: video?.id });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleModal = () => {
+    dispatch(setAssignment({ assignmentModal: false }));
   };
 
   // reset form data
@@ -117,21 +148,21 @@ export default function AssignmentModal({ open, control }) {
 
   useEffect(() => {
     if (editSuccess || addSuccess) {
-      control();
+      handleModal();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editSuccess, addSuccess]);
 
   return (
-    open && (
+    modal && (
       <>
         <div
-          onClick={control}
+          onClick={handleModal}
           className="fixed top-0 left-0 w-full h-full inset-0 z-10 bg-secondary-400 cursor-pointer"
         ></div>
         <div className="rounded-md w-500 lg:w-[600px] space-y-6 bg-secondary p-8 absolute position-center z-20 shadow-md border border-slate-50/10 ">
           <div className="absolute top-1 right-1 ">
-            <button className="" type="button" onClick={control}>
+            <button className="" type="button" onClick={handleModal}>
               <svg
                 viewBox="0 0 15 15"
                 fill="none"
@@ -180,7 +211,7 @@ export default function AssignmentModal({ open, control }) {
 
             <div>
               <button
-                disabled={addLoading || editLoading || videoLength === 0}
+                disabled={addLoading || editLoading}
                 type="submit"
                 className="group  relative w-full flex justify-center py-2 px-4 border border-transparent text-md font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500"
               >
@@ -188,6 +219,12 @@ export default function AssignmentModal({ open, control }) {
               </button>
             </div>
           </form>
+          {!addLoading && isAddError && (
+            <Error bg="error" message={addError?.data} />
+          )}
+          {!editLoading && isEditError && (
+            <Error bg="error" message={editError?.data} />
+          )}
         </div>
       </>
     )

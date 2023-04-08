@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
-  assignmentApi,
-  useGetAssignmentsQuery,
-} from "../../../features/assignment/assignmentApi";
-import { quizApi, useGetQuizzesQuery } from "../../../features/quiz/quizApi";
-import {
   useDeleteVideoMutation,
   useGetVideosQuery,
 } from "../../../features/videos/videosApi";
@@ -15,7 +10,7 @@ import VideoTableLoader from "../../ui/loaders/VideoTableLoader";
 import VideosRow from "../rows/VideosRow";
 
 export default function VideosTable() {
-  // local states
+  //manage local states
 
   const [page, setPage] = useState(1);
   const limit = Number(process.env.REACT_APP_VIDEOS_PER_PAGE);
@@ -32,9 +27,6 @@ export default function VideosTable() {
   } = useGetVideosQuery({ page, limit });
   const { totalPages, response: videos } = data || {};
 
-  const { data: assignments } = useGetAssignmentsQuery({ page });
-  const { data: quizzes } = useGetQuizzesQuery({});
-
   const [
     deleteVideo,
     {
@@ -46,34 +38,8 @@ export default function VideosTable() {
 
   // handlers
 
-  const deleteHandler = async (id) => {
-    try {
-      await deleteVideo(id);
-      if (assignments?.response?.length > 0) {
-        const findAssignment = assignments.response.find(
-          (assignment) => assignment?.video_id === id
-        );
-
-        if (findAssignment) {
-          const assignmentId = Number(findAssignment.id);
-          dispatch(
-            assignmentApi.endpoints.deleteAssignment.initiate(assignmentId)
-          );
-        }
-      }
-
-      if (quizzes?.response?.length > 0) {
-        const videoRelatedQuizzes = quizzes.response.filter(
-          (quiz) => quiz?.video_id === id
-        );
-        if (videoRelatedQuizzes?.length > 0) {
-          videoRelatedQuizzes.forEach((videoQuiz) => {
-            const id = videoQuiz?.id;
-            dispatch(quizApi.endpoints.deleteQuiz.initiate(id));
-          });
-        }
-      }
-    } catch (err) {}
+  const deleteHandler = (id) => {
+    deleteVideo(id);
   };
 
   const handlePrev = () => {
@@ -96,7 +62,7 @@ export default function VideosTable() {
 
   useEffect(() => {
     if (page >= 1) {
-      dispatch(setVideo({ page }));
+      dispatch(setVideo({ videosPage: page }));
     }
   }, [page, dispatch]);
 
@@ -168,7 +134,7 @@ export default function VideosTable() {
 
       {/* pagination  */}
 
-      {!isLoading && !isResponseError && totalPages !== 1 && (
+      {!isLoading && !isResponseError && totalPages > 1 && (
         <div className="flex justify-center items-center mt-10 gap-2">
           <button
             onClick={handlePrev}

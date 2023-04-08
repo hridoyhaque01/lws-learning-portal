@@ -9,11 +9,11 @@ import Error from "../../ui/errors/Error";
 import QuizTableLoader from "../../ui/loaders/QuizTableLoader";
 import QuizRow from "../rows/QuizRow";
 
-export default function QuizTable({ control }) {
+export default function QuizTable() {
   const [page, setPage] = useState(1);
 
   // rtk queries
-  const limit = process.env.REACT_APP_QUIZE_PER_PAGE;
+  const limit = Number(process.env.REACT_APP_QUIZ_PER_PAGE);
 
   const { data, isLoading, isError, error } = useGetQuizzesQuery({
     page,
@@ -43,16 +43,15 @@ export default function QuizTable({ control }) {
     }
   };
 
-  const handleChange = (quiz, type) => {
-    dispatch(setQuiz({ quiz, type }));
-    control();
+  const handleChange = (quiz, type, open) => {
+    dispatch(setQuiz({ quiz, quizType: type, quizModal: open }));
   };
 
   // side effects
 
   useEffect(() => {
     if (page >= 1) {
-      dispatch(setQuiz({ page }));
+      dispatch(setQuiz({ quizPage: page }));
     }
   }, [page, dispatch]);
 
@@ -96,7 +95,7 @@ export default function QuizTable({ control }) {
                 key={id}
                 question={filterQuestion}
                 videoTitle={filterVideoTitle}
-                modalHandler={() => handleChange(quiz, "edit")}
+                handleQuiz={() => handleChange(quiz, "edit", true)}
                 deleteHandler={() => deleteHandler(id)}
                 loader={responseLoading}
               />
@@ -110,12 +109,15 @@ export default function QuizTable({ control }) {
   return (
     <div className="px-3 py-20 bg-opacity-10">
       <div className="w-full flex">
-        <button className="btn ml-auto" onClick={() => handleChange({}, "add")}>
+        <button
+          className="btn ml-auto"
+          onClick={() => handleChange({}, "add", true)}
+        >
           Add Quiz
         </button>
       </div>
       <div className="overflow-x-auto mt-4">{content}</div>
-      {!isLoading && !isError && totalPages !== 1 && (
+      {!isLoading && !isError && totalPages > 1 && (
         <div className="flex justify-center items-center mt-10 gap-2">
           <button
             onClick={handlePrev}

@@ -122,6 +122,10 @@ export const assignmentMarkApi = apiSlice.injectEndpoints({
           }
         } catch (err) {}
       },
+
+      invalidatesTags: (result, error, arg) => {
+        return ["assignmentMark", { type: "getVideo", id: undefined }];
+      },
     }),
     deleteAssignmentMark: builder.mutation({
       query: (id) => ({

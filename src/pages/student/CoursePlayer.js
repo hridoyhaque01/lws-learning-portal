@@ -11,26 +11,24 @@ import {
 } from "../../features/videos/videosApi";
 
 import VideoPlayer from "../../components/page-conponents/VideoPlayer";
-import Error from "../../components/ui/errors/Error";
+import VideoPlayerError from "../../components/ui/errors/VideoPlayerError";
 import VideoPlayerLoader from "../../components/ui/loaders/VideoPlayerLoader";
 import { loadAssignmentInfo } from "../../features/assignmentmark/assignmentMarkSlice";
 
 export default function CoursePlayer() {
-  const [opened, setOpened] = useState(false);
+  // manage local states
+
   const [isParamAvailable, setIsParamAvailable] = useState(false);
   const [randomVideo, setRandomVideo] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { videoId } = useParams();
+
+  // manage redux states
+
   const userId = useSelector(selectId);
   const userName = useSelector(selectName);
   const dispatch = useDispatch();
-
-  // control modal
-
-  const controlModal = () => {
-    setOpened((prevState) => !prevState);
-  };
 
   // call api's
 
@@ -54,6 +52,8 @@ export default function CoursePlayer() {
   );
 
   const { assignment } = allData || {};
+
+  // handle side effects
 
   useEffect(() => {
     if (videoId) {
@@ -105,11 +105,11 @@ export default function CoursePlayer() {
   if (isLoading) {
     content = <VideoPlayerLoader />;
   } else if (!isLoading && isError) {
-    content = <Error bg="error" message={error?.data} />;
+    content = <VideoPlayerError bg="error" message={error?.data} />;
   } else if (!isLoading && !isError && !allData?.video?.id) {
-    content = <Error bg="not-found" message={"No videos Found!"} />;
+    content = <VideoPlayerError bg="not-found" message={"No videos Found!"} />;
   } else if (!isLoading && !isError && allData?.video?.id) {
-    content = <VideoPlayer control={controlModal} data={allData} />;
+    content = <VideoPlayer data={allData} />;
   }
 
   return (
@@ -126,7 +126,7 @@ export default function CoursePlayer() {
           </div>
         </div>
       </section>
-      <SubmitAssignmentModal open={opened} control={controlModal} />
+      <SubmitAssignmentModal />
     </>
   );
 }

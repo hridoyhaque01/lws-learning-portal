@@ -6,9 +6,15 @@ export default function VideoTableLoader() {
       <table className=" w-full">
         <thead>
           <tr>
-            <th className="table-th">Video Title</th>
-            <th className="table-th">Description</th>
-            <th className="table-th">Action</th>
+            <th>
+              <span className="skeleton-item h-8"></span>
+            </th>
+            <th>
+              <span className="skeleton-item h-8"></span>
+            </th>
+            <th>
+              <span className="skeleton-item h-8"></span>
+            </th>
           </tr>
         </thead>
         <tbody>

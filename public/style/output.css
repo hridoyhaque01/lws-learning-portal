@@ -768,6 +768,10 @@ video {
   border-radius: 10px;
 }
 
+.video-player-error {
+  max-height: 450px;
+}
+
 .error {
   background-color: #e44d4d;
   color: white;

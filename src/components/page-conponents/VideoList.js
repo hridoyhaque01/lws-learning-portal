@@ -11,7 +11,7 @@ export default function VideoList() {
   const [hasMore, setHasMore] = useState(true);
   const dispatch = useDispatch();
 
-  const { data, isLoading, isError, error } = useGetVideosQuery();
+  const { data, isLoading, isError, error } = useGetVideosQuery(page);
   const { response: videos, totalPages, totalVideos } = data || {};
 
   const fetchMore = () => {

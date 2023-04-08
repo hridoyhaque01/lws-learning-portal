@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  assignmentApi,
-  useGetAssignmentsQuery,
-} from "../../features/assignment/assignmentApi";
-import { quizApi, useGetQuizzesQuery } from "../../features/quiz/quizApi";
-import {
   useAddVideoMutation,
   useEditVideoMutation,
 } from "../../features/videos/videosApi";
@@ -45,9 +40,6 @@ export default function VideoModal() {
       error: editResponseError,
     },
   ] = useEditVideoMutation();
-
-  const { data: assignments } = useGetAssignmentsQuery({ page });
-  const { data: quizzes } = useGetQuizzesQuery({});
 
   const [
     addVideo,
@@ -90,44 +82,6 @@ export default function VideoModal() {
         },
         page,
       });
-
-      if (assignments?.response?.length > 0) {
-        const findAssignment = assignments.response.find(
-          (assignment) => assignment?.video_id === formValue?.id
-        );
-
-        if (findAssignment) {
-          const assignmentId = Number(findAssignment.id);
-          const video_title = formValue?.title;
-          dispatch(
-            assignmentApi.endpoints.editAssignment.initiate({
-              id: assignmentId,
-              data: { video_title },
-              page,
-            })
-          );
-        }
-      }
-
-      if (quizzes?.response?.length > 0) {
-        const videoRelatedQuizzes = quizzes.response.filter(
-          (quiz) => quiz?.video_id === formValue?.id
-        );
-        if (videoRelatedQuizzes?.length > 0) {
-          videoRelatedQuizzes.forEach((videoQuiz) => {
-            const id = videoQuiz?.id;
-            const video_title = formValue?.title;
-            dispatch(
-              quizApi.endpoints.editQuiz.initiate({
-                id,
-                data: { video_title },
-                page: undefined,
-              })
-            );
-          });
-        }
-      }
-      // dispatch(assignmentApi.endpoints.editAssignment({id, data, page}))
     }
 
     if (type === "add") {

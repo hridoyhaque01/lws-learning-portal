@@ -1,6 +1,6 @@
 import { apiSlice } from "../api/apiSlice";
 
-const quizLimit = process.env.REACT_APP_QUIZ_PER_PAGE;
+const quizLimit = Number(process.env.REACT_APP_QUIZ_PER_PAGE);
 
 export const quizApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -31,29 +31,52 @@ export const quizApi = apiSlice.injectEndpoints({
         body: data,
       }),
 
-      async onQueryStarted({ page }, { queryFulfilled, dispatch }) {
+      async onQueryStarted({ id, page }, { queryFulfilled, dispatch }) {
         try {
           const { data } = await queryFulfilled;
+          // let quiz = {};
           if (data?.id) {
             dispatch(
               apiSlice.util.updateQueryData(
                 "getQuizzes",
 
-                { page, limit: undefined },
+                { page, limit: quizLimit },
                 (draft) => {
-                  console.log(JSON.parse(JSON.stringify(draft)));
                   const index = draft.response.findIndex(
                     (video) => video.id === data?.id
                   );
 
-                  console.log(index);
                   if (index !== -1) {
+                    // quiz = { ...quiz, ...draft.response[index] };
                     draft.response[index] = data;
                   }
                 }
               )
             );
           }
+
+          // const quizMarks = await dispatch(
+          //   quizMarkApi.endpoints.getAllQuizMark.initiate()
+          // ).unwrap();
+
+          // if (quizMarks?.length > 0) {
+          //   const filteredQuizMarks = quizMarks.filter(
+          //     (quizMark) => quizMark?.video_id === quiz?.video_id
+          //   );
+          //   if (filteredQuizMarks?.length > 0) {
+          //     filteredQuizMarks.forEach((filteredQuizMark) => {
+          //       const quizMarkId = filteredQuizMark?.id;
+          //       const video_id = data?.video_id;
+          //       const video_title = data?.video_title;
+          //       dispatch(
+          //         quizMarkApi.endpoints.editQuizMark.initiate({
+          //           id: quizMarkId,
+          //           data: { video_id, video_title },
+          //         })
+          //       );
+          //     });
+          //   }
+          // }
         } catch (err) {}
       },
     }),

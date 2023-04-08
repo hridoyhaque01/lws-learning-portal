@@ -3,7 +3,7 @@ import React from "react";
 export default function QuizRow({
   question,
   videoTitle,
-  modalHandler,
+  handleQuiz,
   deleteHandler,
   loader,
 }) {
@@ -28,7 +28,7 @@ export default function QuizRow({
           </svg>
         </button>
 
-        <button type="button" onClick={modalHandler}>
+        <button type="button" onClick={handleQuiz}>
           <svg
             fill="none"
             viewBox="0 0 24 24"

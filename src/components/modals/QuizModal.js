@@ -1,16 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useAddQuizMutation,
   useEditQuizMutation,
 } from "../../features/quiz/quizApi";
+import {
+  selectQuiz,
+  selectQuizModal,
+  selectQuizPage,
+  selectQuizType,
+} from "../../features/quiz/quizSelectors";
+import { setQuiz } from "../../features/quiz/quizSlice";
 import { useGetVideosQuery } from "../../features/videos/videosApi";
+import Error from "../ui/errors/Error";
 import Checkbox from "../ui/inputes/Checkbox";
 import ModalInput from "../ui/inputes/ModalInput";
 import OptionInput from "../ui/inputes/OptionInput";
 
-export default function QuizModal({ open, control }) {
-  const { type, page, quiz } = useSelector((state) => state.quiz);
+export default function QuizModal() {
+  const type = useSelector(selectQuizType);
+  const quiz = useSelector(selectQuiz);
+  const page = useSelector(selectQuizPage);
+  const modal = useSelector(selectQuizModal);
+
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     question: "",
@@ -44,10 +57,24 @@ export default function QuizModal({ open, control }) {
 
   const { response: videos } = data || {};
 
-  const [addQuiz, { isSuccess: addSuccess, isLoading: addLoading }] =
-    useAddQuizMutation();
-  const [editQuiz, { isSuccess: editSuccess, isLoading: editLoading }] =
-    useEditQuizMutation();
+  const [
+    addQuiz,
+    {
+      isSuccess: addSuccess,
+      isLoading: addLoading,
+      isError: isAddError,
+      error: addError,
+    },
+  ] = useAddQuizMutation();
+  const [
+    editQuiz,
+    {
+      isSuccess: editSuccess,
+      isLoading: editLoading,
+      isError: isEditError,
+      error: editError,
+    },
+  ] = useEditQuizMutation();
 
   // decide what to render
 
@@ -129,6 +156,10 @@ export default function QuizModal({ open, control }) {
     setFormData({ ...formData, options: updatedOption });
   };
 
+  const handleModal = () => {
+    dispatch(setQuiz({ assignmentModal: false }));
+  };
+
   // reset form data
 
   const resetForm = () => {
@@ -171,21 +202,21 @@ export default function QuizModal({ open, control }) {
 
   useEffect(() => {
     if (editSuccess || addSuccess) {
-      control();
+      handleModal();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editSuccess, addSuccess]);
 
   return (
-    open && (
+    modal && (
       <>
         <div
-          onClick={control}
+          onClick={handleModal}
           className="fixed top-0 left-0 w-full h-full inset-0 z-10 bg-secondary-400 cursor-pointer"
         ></div>
         <div className="rounded-md w-500 lg:w-[600px] space-y-6 bg-secondary p-8 absolute position-center z-20 shadow-md border border-slate-50/10 ">
           <div className="absolute top-1 right-1 ">
-            <button className="" type="button" onClick={control}>
+            <button className="" type="button" onClick={handleModal}>
               <svg
                 viewBox="0 0 15 15"
                 fill="none"
@@ -328,6 +359,12 @@ export default function QuizModal({ open, control }) {
               </button>
             </div>
           </form>
+          {!addLoading && isAddError && (
+            <Error bg="error" message={addError?.data} />
+          )}
+          {!editLoading && isEditError && (
+            <Error bg="error" message={editError?.data} />
+          )}
         </div>
       </>
     )

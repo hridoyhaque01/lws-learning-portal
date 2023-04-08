@@ -4,7 +4,7 @@ import assinmentReducer from "../features/assignment/assignmentSlice";
 import assignmentMarkReducer from "../features/assignmentmark/assignmentMarkSlice";
 import authReducer from "../features/auth/authSlice";
 import quizReducer from "../features/quiz/quizSlice";
-import quizMarkReducer from "../features/quizMark.js/quizMarkSlice";
+import quizMarkReducer from "../features/quizMark/quizMarkSlice";
 import videosReducer from "../features/videos/videosSlice";
 
 export const store = configureStore({
@@ -17,6 +17,7 @@ export const store = configureStore({
     quizMark: quizMarkReducer,
     assignmentMark: assignmentMarkReducer,
   },
+  devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddlewares) =>
     getDefaultMiddlewares().concat(apiSlice.middleware),
 });

@@ -1,11 +1,18 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { controlSubmitAssignmentModal } from "../../features/assignment/assignmentSlice";
 import getLocalDate from "../../utils/getLocalDate";
 
-export default function VideoDescription({ control, video, allData }) {
+export default function VideoDescription({ video, allData }) {
   const { id, title, createdAt, description } = video || {};
+  const dispatch = useDispatch();
 
   const { assignment, quizData, quizSubmit, assignmentSubmit } = allData || {};
+
+  const handleAssignmentSubmitModal = (open) => {
+    dispatch(controlSubmitAssignmentModal(open));
+  };
 
   return (
     <div>
@@ -27,7 +34,7 @@ export default function VideoDescription({ control, video, allData }) {
           <button
             className="px-3 font-bold py-1 border border-cyan text-cyan rounded-full text-sm hover:bg-cyan hover:text-primary"
             type="button"
-            onClick={control}
+            onClick={() => handleAssignmentSubmitModal(true)}
           >
             এসাইনমেন্ট
           </button>

@@ -69,6 +69,7 @@ export const markApi = apiSlice.injectEndpoints({
 
         return { data: finalResult };
       },
+      providesTags: ["getStudentResult"],
     }),
   }),
 });

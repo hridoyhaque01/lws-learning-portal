@@ -6,9 +6,15 @@ export default function QuizTableLoader() {
       <table className=" w-full">
         <thead>
           <tr>
-            <th className="table-th">Question</th>
-            <th className="table-th">Video</th>
-            <th className="table-th">Action</th>
+            <th>
+              <span className="skeleton-item"></span>
+            </th>
+            <th>
+              <span className="skeleton-item"></span>
+            </th>
+            <th>
+              <span className="skeleton-item"></span>
+            </th>
           </tr>
         </thead>
         <tbody>

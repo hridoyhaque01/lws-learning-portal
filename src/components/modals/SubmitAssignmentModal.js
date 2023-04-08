@@ -1,15 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectSubmitAssignmentModal } from "../../features/assignment/assignmentSelectors";
+import { controlSubmitAssignmentModal } from "../../features/assignment/assignmentSlice";
 import { useSubmitAssignmentMutation } from "../../features/assignmentmark/assignmentMarkApi";
 import { selectAssignmentInfo } from "../../features/assignmentmark/assignmentSelectors";
 import Error from "../ui/errors/Error";
 
-export default function SubmitAssignmentModal({ open, control }) {
+export default function SubmitAssignmentModal() {
   const [input, setInput] = useState("");
   const assingnmentInfo = useSelector(selectAssignmentInfo);
+  const modal = useSelector(selectSubmitAssignmentModal);
   const [submitAssignment, { isLoading, isError, isSuccess }] =
     useSubmitAssignmentMutation();
+
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,22 +32,26 @@ export default function SubmitAssignmentModal({ open, control }) {
     submitAssignment(submittedObj);
   };
 
+  const handleModal = () => {
+    dispatch(controlSubmitAssignmentModal(false));
+  };
+
   useEffect(() => {
     if (isSuccess) {
-      control();
+      handleModal();
     }
   }, [isSuccess]);
 
   return (
-    open && (
+    modal && (
       <>
         <div
-          onClick={control}
+          onClick={handleModal}
           className="fixed top-0 left-0 w-full h-full inset-0 z-10 bg-secondary-400 cursor-pointer"
         ></div>
         <div className="rounded-md w-500 lg:w-[600px] space-y-6 bg-secondary p-8 absolute position-center z-20 shadow-md border border-slate-50/10 ">
           <div className="absolute top-1 right-1 ">
-            <button className="" type="button" onClick={control}>
+            <button className="" type="button" onClick={handleModal}>
               <svg
                 viewBox="0 0 15 15"
                 fill="none"

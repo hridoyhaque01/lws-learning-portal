@@ -6,11 +6,21 @@ export default function AssignmentMarkLoader() {
       <table className=" w-full">
         <thead>
           <tr>
-            <th className="table-th">Assignment</th>
-            <th className="table-th">Date</th>
-            <th className="table-th">Student Name</th>
-            <th className="table-th">Repo Link</th>
-            <th className="table-th">Mark</th>
+            <th>
+              <span className="skeleton-item h-8"></span>
+            </th>
+            <th>
+              <span className="skeleton-item h-8"></span>
+            </th>
+            <th>
+              <span className="skeleton-item h-8"></span>
+            </th>
+            <th>
+              <span className="skeleton-item h-8"></span>
+            </th>
+            <th>
+              <span className="skeleton-item h-8"></span>
+            </th>
           </tr>
         </thead>
         <tbody>

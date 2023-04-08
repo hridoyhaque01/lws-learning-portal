@@ -68,6 +68,15 @@
       "views": "91.2K",
       "duration": "31:30",
       "createdAt": "2023-02-24T17:59:00.000Z"
+    },
+    {
+      "title": "Facing the Future: The Truth About Artificial Intelligence and Our Jobs - Bangla",
+      "description": "This video explores the impact of artificial intelligence on employment, examining the history of automation and the current state of AI technology. The video aims to provide a balanced perspective on the topic, helping viewers understand the truth about AI's impact on jobs and offering advice on how to prepare for the changing job market. This video also answers the most common questions asked by programmers worldwide - \"Will AI take my job?\"",
+      "views": "21.92k",
+      "duration": "40:50",
+      "url": "https://www.youtube.com/embed/BihZd2x8Qh8",
+      "createdAt": "2023-04-08T13:07:41.852Z",
+      "id": 6
     }
   ],
   "assignments": [
@@ -181,9 +190,9 @@
       "title": "Assignment 1 - Implement Debounce Function",
       "createdAt": "2021-01-15T15:17:01.727Z",
       "totalMark": 100,
-      "mark": 0,
+      "mark": 100,
       "repo_link": "https://github.com/Learn-with-Sumit/assignment-1",
-      "status": "pending"
+      "status": "published"
     },
     {
       "id": 2,
@@ -222,6 +231,30 @@
       "totalWrong": 1,
       "totalMark": 10,
       "mark": 5
+    },
+    {
+      "student_id": 5,
+      "student_name": "Ferdous",
+      "video_id": 1,
+      "video_title": "Debounce Function in JavaScript - JavaScript Job Interview question",
+      "totalQuiz": 2,
+      "totalCorrect": 1,
+      "totalWrong": 1,
+      "totalMark": 10,
+      "mark": 5,
+      "id": 2
+    },
+    {
+      "student_id": 5,
+      "student_name": "Ferdous",
+      "video_id": 2,
+      "video_title": "#2 JavaScript Tips and Tricks - JavaScript Job Interview Questions",
+      "totalQuiz": 1,
+      "totalCorrect": 1,
+      "totalWrong": 0,
+      "totalMark": 5,
+      "mark": 5,
+      "id": 3
     }
   ]
 }

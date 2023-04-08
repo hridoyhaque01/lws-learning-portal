@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { setAnswer } from "../../features/quizMark.js/quizMarkSlice";
+import { setAnswer } from "../../features/quizMark/quizMarkSlice";
 import QuizInput from "../ui/inputes/QuizInput";
 
 export default function QuizList({ currentQuestion, quizzes }) {

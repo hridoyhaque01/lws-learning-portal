@@ -16,7 +16,6 @@ export const authApi = apiSlice.injectEndpoints({
           const { data } = result || {};
           if (data?.accessToken && data?.user) {
             if (data?.user?.role !== role) {
-              console.log(true);
               dispatch(loginError("Enter valid email or password"));
             } else {
               localStorage.setItem(

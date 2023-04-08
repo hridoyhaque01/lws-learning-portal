@@ -1,4 +1,5 @@
 import { apiSlice } from "../api/apiSlice";
+import { assignmentMarkApi } from "../assignmentmark/assignmentMarkApi";
 
 const assignmentLimit = Number(process.env.REACT_APP_ASSIGNMENT_PER_PAGE);
 
@@ -48,7 +49,7 @@ export const assignmentApi = apiSlice.injectEndpoints({
         body: data,
       }),
 
-      async onQueryStarted({ page }, { queryFulfilled, dispatch }) {
+      async onQueryStarted({ page, id }, { queryFulfilled, dispatch }) {
         try {
           const { data } = await queryFulfilled;
 
@@ -68,8 +69,39 @@ export const assignmentApi = apiSlice.injectEndpoints({
               )
             );
           }
+
+          // const get assignmentmark api response
+
+          const { response: assignmentMarks } = await dispatch(
+            assignmentMarkApi.endpoints.getAssignmentsMark.initiate({})
+          ).unwrap();
+
+          // update assignment mark title
+
+          if (assignmentMarks?.length > 0) {
+            const relatedAssignmentMark = assignmentMarks.filter(
+              (assignmentMark) => assignmentMark?.assignment_id === id
+            );
+            if (relatedAssignmentMark?.length > 0) {
+              relatedAssignmentMark.forEach((assignment) => {
+                const assignmentId = assignment?.id;
+                const title = data?.title;
+                dispatch(
+                  assignmentMarkApi.endpoints.editAssignmentMark.initiate({
+                    id: assignmentId,
+                    data: { title },
+                    page: undefined,
+                  })
+                );
+              });
+            }
+          }
         } catch (err) {}
       },
+      invalidatesTags: (result, error, arg) => [
+        "assignments",
+        { type: "getAssignmentVideos", id: arg.id },
+      ],
     }),
     addAssignment: builder.mutation({
       query: (data) => ({
@@ -77,14 +109,52 @@ export const assignmentApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["assignments"],
+      invalidatesTags: (result, error, arg) => [
+        "assignments",
+        { type: "getAssignmentVideos", id: undefined },
+      ],
     }),
     deleteAssignment: builder.mutation({
       query: (id) => ({
         url: `/assignments/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["assignments"],
+      async onQueryStarted(id, { queryFulfilled, dispatch }) {
+        try {
+          await queryFulfilled;
+          const data = dispatch(
+            assignmentMarkApi.endpoints.getAssignmentsMark.initiate({})
+          );
+
+          // get assignment mark response
+
+          const { response: assignmentMarks } = await dispatch(
+            assignmentMarkApi.endpoints.getAssignmentsMark.initiate({})
+          ).unwrap();
+
+          // delete assignment related mark
+
+          if (assignmentMarks?.length > 0) {
+            const filteredAssignments = assignmentMarks.filter(
+              (assignmentMark) => assignmentMark?.assignment_id === id
+            );
+            if (filteredAssignments?.length > 0) {
+              filteredAssignments.forEach((assignment) => {
+                const assignmentId = assignment.id;
+                dispatch(
+                  assignmentMarkApi.endpoints.deleteAssignmentMark.initiate(
+                    assignmentId
+                  )
+                );
+              });
+            }
+          }
+        } catch (err) {}
+      },
+      invalidatesTags: (result, error, arg) => [
+        "assignments",
+        { type: "getAssignmentVideos", id: undefined },
+      ],
     }),
   }),
 });

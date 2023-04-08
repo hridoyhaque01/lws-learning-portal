@@ -83,7 +83,7 @@ function App() {
         />
 
         <Route
-          path="/admin/marks"
+          path="/admin/assignmentMarks"
           element={
             <PrivateRouteAdmin>
               <AssignmentMark />

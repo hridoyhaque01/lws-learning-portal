@@ -9,15 +9,15 @@ import { useGetAllQuizQuery } from "../../features/quiz/quizApi";
 
 import QuizList from "../../components/page-conponents/QuizList";
 import { selectId, selectName } from "../../features/auth/authSelectors";
-import { quizMarkApi } from "../../features/quizMark.js/quizMarkApi";
+import { quizMarkApi } from "../../features/quizMark/quizMarkApi";
 import {
   loadAllQuizzes,
   loadOriginalQuizzes,
-} from "../../features/quizMark.js/quizMarkSlice";
+} from "../../features/quizMark/quizMarkSlice";
 import {
   selectAnswers,
   selectQuizzes,
-} from "../../features/quizMark.js/quizSelectors";
+} from "../../features/quizMark/quizSelectors";
 
 export default function Quiz() {
   // get params
@@ -63,14 +63,14 @@ export default function Quiz() {
     }
   };
 
-  //
+  // submit quiz data to api
+
   const submit = () => {
     const data = handleSubmitData();
     dispatch(quizMarkApi.endpoints.addQuizMark.initiate(data))
       .unwrap()
       .then((result) => {
         if (result?.id) {
-          // dispatch(quizMarkApi.endpoints.getAllQuizMark.initiate()).unwrap();
           navigate("/leaderboard");
         }
       })
@@ -80,9 +80,10 @@ export default function Quiz() {
       });
   };
 
+  // get final submit data
+
   const handleSubmitData = () => {
     const { mark, totalCorrect } = calculateQuiz();
-
     const data = {
       student_id,
       student_name,
@@ -94,9 +95,10 @@ export default function Quiz() {
       totalMark: totalQuiz * 5,
       mark,
     };
-
     return data;
   };
+
+  // calculate quiz mark
 
   const calculateQuiz = () => {
     let mark = 0;
@@ -171,6 +173,8 @@ export default function Quiz() {
               </button>
             </div>
           )}
+
+          {responseError !== "" && <Error bg="error" message={responseError} />}
         </div>
       </section>
     </>
